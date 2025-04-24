@@ -33,7 +33,11 @@
 
                 {{-- Logo Image --}}
                 @if (config('adminlte.auth_logo.enabled', false))
-                    <img src="{{ asset(config('adminlte.auth_logo.img.path')) }}"
+                    @php
+                        $logoPath = config('adminlte.auth_logo.img.path');
+                        $isExternalUrl = strpos($logoPath, 'http') === 0;
+                    @endphp
+                    <img src="{{ $isExternalUrl ? $logoPath : asset($logoPath) }}"
                          alt="{{ config('adminlte.auth_logo.img.alt') }}"
                          @if (config('adminlte.auth_logo.img.class', null))
                             class="{{ config('adminlte.auth_logo.img.class') }}"

@@ -63,9 +63,9 @@ return [
     |
     */
 
-    'logo' => '<b>Medical</b>RS',
-    'logo_img' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
-    'logo_img_class' => 'brand-image img-circle elevation-3',
+    'logo' => '<b>3.4</b>',
+    'logo_img' => 'http://qmed.asia/newLanding/img/group-52@1x.png',
+    'logo_img_class' => 'brand-image',
     'logo_img_xl' => null,
     'logo_img_xl_class' => 'brand-image-xs',
     'logo_img_alt' => 'Medical Referral System',
@@ -84,12 +84,12 @@ return [
     */
 
     'auth_logo' => [
-        'enabled' => false,
+        'enabled' => true,
         'img' => [
-            'path' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
-            'alt' => 'Auth Logo',
+            'path' => 'http://qmed.asia/newLanding/img/group-52@1x.png',
+            'alt' => 'Medical Referral System Logo',
             'class' => '',
-            'width' => 50,
+            'width' => null,
             'height' => 50,
         ],
     ],
@@ -113,8 +113,8 @@ return [
         'enabled' => true,
         'mode' => 'fullscreen',
         'img' => [
-            'path' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
-            'alt' => 'AdminLTE Preloader Image',
+            'path' => 'http://qmed.asia/newLanding/img/group-52@1x.png',
+            'alt' => 'Medical Referral System Logo',
             'effect' => 'animation__shake',
             'width' => 60,
             'height' => 60,
@@ -321,76 +321,40 @@ return [
             'can' => 'manage-blog',
         ],
         [
-            'text' => 'pages',
-            'url' => 'admin/pages',
-            'icon' => 'far fa-fw fa-file',
-            'label' => 4,
-            'label_color' => 'success',
-        ],
-        ['header' => 'account_settings'],
-        [
-            'text' => 'profile',
-            'url' => 'admin/settings',
-            'icon' => 'fas fa-fw fa-user',
-        ],
-        [
-            'text' => 'change_password',
-            'url' => 'admin/settings',
-            'icon' => 'fas fa-fw fa-lock',
-        ],
-        [
-            'text' => 'multilevel',
-            'icon' => 'fas fa-fw fa-share',
+            'text' => 'Admin Management',
+            'icon' => 'fas fa-fw fa-cogs',
             'submenu' => [
                 [
-                    'text' => 'level_one',
-                    'url' => '#',
+                    'text' => 'Hospitals',
+                    'url' => 'admin/hospitals',
+                    'icon' => 'fas fa-fw fa-hospital',
                 ],
                 [
-                    'text' => 'level_one',
-                    'url' => '#',
-                    'submenu' => [
-                        [
-                            'text' => 'level_two',
-                            'url' => '#',
-                        ],
-                        [
-                            'text' => 'level_two',
-                            'url' => '#',
-                            'submenu' => [
-                                [
-                                    'text' => 'level_three',
-                                    'url' => '#',
-                                ],
-                                [
-                                    'text' => 'level_three',
-                                    'url' => '#',
-                                ],
-                            ],
-                        ],
-                    ],
+                    'text' => 'Specialties',
+                    'url' => 'admin/specialties',
+                    'icon' => 'fas fa-fw fa-stethoscope',
                 ],
                 [
-                    'text' => 'level_one',
-                    'url' => '#',
+                    'text' => 'Consultants',
+                    'url' => 'admin/consultants',
+                    'icon' => 'fas fa-fw fa-user-md',
+                ],
+                [
+                    'text' => 'Services',
+                    'url' => 'admin/services', 
+                    'icon' => 'fas fa-fw fa-clipboard-list',
+                ],
+                [
+                    'text' => 'Clinics',
+                    'url' => 'admin/clinics',
+                    'icon' => 'fas fa-fw fa-clinic-medical',
+                ],
+                [
+                    'text' => 'GP',
+                    'url' => 'admin/gp',
+                    'icon' => 'fas fa-fw fa-user-nurse',
                 ],
             ],
-        ],
-        ['header' => 'labels'],
-        [
-            'text' => 'important',
-            'icon_color' => 'red',
-            'url' => '#',
-        ],
-        [
-            'text' => 'warning',
-            'icon_color' => 'yellow',
-            'url' => '#',
-        ],
-        [
-            'text' => 'information',
-            'icon_color' => 'cyan',
-            'url' => '#',
         ],
     ],
 
