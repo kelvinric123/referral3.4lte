@@ -23,6 +23,14 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             AdminUserSeeder::class,
             HospitalSeeder::class,
+            SpecialtySeeder::class,
+            ConsultantSeeder::class,
+            ServiceSeeder::class,
+            ClinicSeeder::class,
+            GPSeeder::class,
+            CompanySeeder::class,
+            BookingAgentSeeder::class,
+            LoyaltyPointSettingSeeder::class,
         ]);
     }
 }

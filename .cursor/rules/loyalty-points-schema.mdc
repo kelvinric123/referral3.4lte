@@ -1,0 +1,50 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Loyalty Points Database Schema
+
+## Tables Structure
+
+### LoyaltyPointSettings Table
+[Migration File](mdc:database/migrations/2025_04_22_174604_create_loyalty_point_settings_table.php)
+
+- `id`: Primary key
+- `entity_type`: Enum ('GP', 'Booking Agent')
+- `referral_status`: Enum ('Pending', 'Approved', 'Rejected', 'No Show', 'Completed')
+- `points`: Integer (number of points to award/deduct)
+- `description`: Text (optional description of the point rule)
+- `is_active`: Boolean (whether this rule is active)
+- Unique constraint on (`entity_type`, `referral_status`)
+
+### LoyaltyPoints Table
+[Migration File](mdc:database/migrations/2025_04_22_180700_create_loyalty_points_table.php)
+
+- `id`: Primary key
+- `pointable_id` & `pointable_type`: Polymorphic relationship (refers to either GP or Booking Agent)
+- `referral_id`: Foreign key to the related referral
+- `points`: Integer (points awarded/deducted in this transaction)
+- `status`: Enum ('Pending', 'Approved', 'Rejected', 'No Show', 'Completed')
+- `description`: Text (description of the transaction)
+- `balance`: Integer (total point balance after this transaction)
+
+## Initial Data
+
+The system comes pre-seeded with loyalty point settings for both entity types (GP and Booking Agent) and all possible statuses. The [LoyaltyPointSettingSeeder](mdc:database/seeders/LoyaltyPointSettingSeeder.php) provides the initial values.
+
+Default point values:
+- **GP**:
+  - Pending: 10 points
+  - Approved: 20 points
+  - Rejected: 0 points
+  - No Show: 0 points
+  - Completed: 50 points
+
+- **Booking Agent**:
+  - Pending: 5 points
+  - Approved: 10 points
+  - Rejected: 0 points
+  - No Show: 0 points
+  - Completed: 25 points
+

@@ -1,0 +1,54 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Loyalty Points System Structure
+
+## Core Models
+
+The loyalty points system consists of three main components:
+
+1. [LoyaltyPoint Model](mdc:app/Models/LoyaltyPoint.php) - Tracks individual point transactions
+2. [LoyaltyPointSetting Model](mdc:app/Models/LoyaltyPointSetting.php) - Defines point values for different statuses
+3. [Referral Model](mdc:app/Models/Referral.php) - Contains the logic to award points based on status changes
+
+## Entity Relationships
+
+- Loyalty points are awarded to either General Practitioners (GPs) or Booking Agents
+- [GeneralPractitioner Model](mdc:app/Models/GeneralPractitioner.php) and [BookingAgent Model](mdc:app/Models/BookingAgent.php) both have a polymorphic relationship with LoyaltyPoint
+- When a Referral status changes, points are awarded according to the LoyaltyPointSetting
+- Completed referrals give the most points (50 for GPs, 25 for Booking Agents)
+
+## Point Calculation Flow
+
+1. A Referral is created or its status is updated
+2. The `updateLoyaltyPoints()` method in the Referral model is triggered
+3. The system identifies whether a GP or Booking Agent should receive points
+4. The appropriate LoyaltyPointSetting is retrieved based on entity type and status
+5. A new LoyaltyPoint record is created with the calculated balance
+
+## Admin Interface
+
+- Admin can view and edit existing loyalty point settings at `/admin/loyalty-point-settings`
+- Creation of new loyalty point settings is disabled to maintain consistency
+- The [LoyaltyPointSettingResource](mdc:app/Filament/Resources/LoyaltyPointSettingResource.php) handles the admin interface
+- Each entity type (GP/Booking Agent) and status combination has only one setting
+- The Edit Referral page includes a "Mark as Completed" action that triggers loyalty points for GPs
+- Loyalty Points history pages show detailed information about points earned from completed referrals
+
+## Standardized Status System
+
+The system uses a single consistent set of statuses throughout:
+- Pending
+- Approved
+- Rejected
+- No Show
+- Completed
+
+These statuses are used directly in both the Referral model and the loyalty point settings, ensuring complete consistency across the application.
+
+
+
+
+

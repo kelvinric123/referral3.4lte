@@ -148,6 +148,11 @@
                     <p class="mb-0">
                         <a href="{{ route('password.request') }}">I forgot my password</a>
                     </p>
+                    <p class="mt-3 mb-0">
+                        <a href="{{ route('gp.login.form') }}" class="btn btn-outline-success btn-sm">
+                            <i class="fas fa-user-md mr-1"></i> GP Doctor Login
+                        </a>
+                    </p>
                 </div>
             </div>
         </div>

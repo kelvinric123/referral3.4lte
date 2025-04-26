@@ -26,13 +26,48 @@ Route::get('/', function () {
 // Authentication Routes
 Auth::routes();
 
+// GP Authentication Routes
+Route::get('/gp/login', [App\Http\Controllers\Auth\GPLoginController::class, 'showLoginForm'])->name('gp.login.form');
+Route::post('/gp/login', [App\Http\Controllers\Auth\GPLoginController::class, 'login'])->name('gp.login');
+
 // Default home route
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 // Admin Routes
-Route::prefix('admin')->group(function () {
-    Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
-    Route::resource('hospitals', App\Http\Controllers\Admin\HospitalController::class)->names('admin.hospitals');
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:super-admin'])->group(function () {
+    Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+    Route::resource('hospitals', App\Http\Controllers\Admin\HospitalController::class)->names('hospitals');
+    Route::resource('specialties', App\Http\Controllers\Admin\SpecialtyController::class)->names('specialties');
+    Route::resource('consultants', App\Http\Controllers\Admin\ConsultantController::class)->names('consultants');
+    Route::resource('services', App\Http\Controllers\Admin\ServiceController::class)->names('services');
+    Route::resource('clinics', App\Http\Controllers\Admin\ClinicController::class)->names('clinics');
+    Route::resource('gps', App\Http\Controllers\Admin\GPController::class)->names('gps');
+    Route::resource('companies', App\Http\Controllers\Admin\CompanyController::class)->names('companies');
+    Route::resource('booking-agents', App\Http\Controllers\Admin\BookingAgentController::class)->names('booking-agents');
+    
+    // Referral Management Routes
+    Route::resource('referrals', App\Http\Controllers\Admin\ReferralController::class)->names('referrals');
+    
+    // Document Management Routes
+    Route::get('/documents/{document}/download', [App\Http\Controllers\Admin\DocumentController::class, 'download'])->name('documents.download');
+    Route::delete('/documents/{document}', [App\Http\Controllers\Admin\DocumentController::class, 'destroy'])->name('documents.destroy');
+    
+    // Loyalty Point Settings Routes
+    Route::resource('loyalty-point-settings', App\Http\Controllers\Admin\LoyaltyPointSettingController::class)
+        ->only(['index', 'edit', 'update'])
+        ->names('loyalty-point-settings');
+    
+    // GP Loyalty Points Routes
+    Route::get('gp-loyalty-points', [App\Http\Controllers\Admin\GPLoyaltyPointController::class, 'index'])
+        ->name('gp-loyalty-points.index');
+    Route::get('gp-loyalty-points/{id}', [App\Http\Controllers\Admin\GPLoyaltyPointController::class, 'show'])
+        ->name('gp-loyalty-points.show');
+    
+    // Booking Agent Loyalty Points Routes
+    Route::get('booking-agent-loyalty-points', [App\Http\Controllers\Admin\BookingAgentLoyaltyPointController::class, 'index'])
+        ->name('booking-agent-loyalty-points.index');
+    Route::get('booking-agent-loyalty-points/{id}', [App\Http\Controllers\Admin\BookingAgentLoyaltyPointController::class, 'show'])
+        ->name('booking-agent-loyalty-points.show');
 });
 
 // Hospital Admin Routes
@@ -46,8 +81,17 @@ Route::prefix('consultant')->group(function () {
 });
 
 // GP Doctor Routes
-Route::prefix('doctor')->group(function () {
-    Route::get('/dashboard', [DoctorDashboardController::class, 'index'])->name('doctor.dashboard');
+Route::prefix('doctor')->name('doctor.')->middleware(['auth', 'role:gp-doctor'])->group(function () {
+    Route::get('/dashboard', [DoctorDashboardController::class, 'index'])->name('dashboard');
+    
+    // Referrals
+    Route::get('/referrals', [App\Http\Controllers\Doctor\ReferralController::class, 'index'])->name('referrals.index');
+    Route::get('/referrals/create', [App\Http\Controllers\Doctor\ReferralController::class, 'create'])->name('referrals.create');
+    Route::post('/referrals', [App\Http\Controllers\Doctor\ReferralController::class, 'store'])->name('referrals.store');
+    Route::get('/referrals/{referral}', [App\Http\Controllers\Doctor\ReferralController::class, 'show'])->name('referrals.show');
+    
+    // Loyalty Points
+    Route::get('/loyalty-points', [App\Http\Controllers\Doctor\LoyaltyPointController::class, 'index'])->name('loyalty-points.index');
 });
 
 // Booking Agent Routes

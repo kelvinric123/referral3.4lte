@@ -1,0 +1,46 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Referral System Overview
+
+## Core Structure
+
+The referral system is built around these key components:
+
+1. [Referral Model](mdc:app/Models/Referral.php) - Core data model for patient referrals
+2. [ReferralResource](mdc:app/Filament/Resources/ReferralResource.php) - Admin interface for managing referrals
+
+## Entity Relationships
+
+- A Referral can be associated with either a [General Practitioner](mdc:app/Models/GeneralPractitioner.php) or a [Booking Agent](mdc:app/Models/BookingAgent.php)
+- Referrals are assigned to specific [Consultants](mdc:app/Models/Consultant.php) at a [Hospital](mdc:app/Models/Hospital.php)
+- Each Referral must be categorized with a [Specialty](mdc:app/Models/Specialty.php)
+- The referral status triggers [Loyalty Points](mdc:app/Models/LoyaltyPoint.php) based on [LoyaltyPointSettings](mdc:app/Models/LoyaltyPointSetting.php)
+
+## Referral Workflow
+
+1. A new Referral is created with patient details and assigned to a Consultant
+2. The Referral status is updated throughout its lifecycle (Pending → Approved → Completed)
+3. Status changes trigger Loyalty Points calculations for the referrer (GP or Booking Agent)
+4. Admins can manage the entire process through the Filament admin interface
+
+## Referral Statuses
+
+The system uses the following statuses throughout:
+- Pending
+- Approved
+- Rejected
+- No Show
+- Completed
+
+## Key Fields
+
+- Patient information (name, IC/passport, DOB, contact details)
+- Hospital and Specialty selection
+- Consultant preferences (language, gender)
+- Referrer information (GP Doctor or Booking Agent)
+- Appointment details (preferred date, priority level)
+- Medical information (diagnosis, clinical history, remarks)
+

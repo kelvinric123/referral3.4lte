@@ -25,4 +25,28 @@ class Hospital extends Model
     protected $casts = [
         'is_active' => 'boolean',
     ];
+
+    /**
+     * Get the specialties for the hospital.
+     */
+    public function specialties()
+    {
+        return $this->hasMany(Specialty::class);
+    }
+
+    /**
+     * Get the consultants for the hospital.
+     */
+    public function consultants()
+    {
+        return $this->hasMany(Consultant::class);
+    }
+
+    /**
+     * Get the services for the hospital.
+     */
+    public function services()
+    {
+        return $this->hasMany(Service::class);
+    }
 }

@@ -1,0 +1,56 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Loyalty Points Admin Interface
+
+## Overview
+
+The loyalty points admin interface allows administrators to manage loyalty point settings through Filament resource pages. The creation of new loyalty point settings has been disabled to maintain consistency with the referral model's status tracking.
+
+## Key Components
+
+### LoyaltyPointSettingResource
+[Resource File](mdc:app/Filament/Resources/LoyaltyPointSettingResource.php)
+
+- Defines the form fields and table structure for loyalty point settings
+- Disables creation of new settings via `canCreate(): bool` method
+- Groups loyalty point settings by entity type (GP/Booking Agent)
+- Provides actions to edit, activate, and deactivate settings
+
+### ListLoyaltyPointSettings Page
+[Page File](mdc:app/Filament/Resources/LoyaltyPointSettingResource/Pages/ListLoyaltyPointSettings.php)
+
+- Displays a list of all loyalty point settings
+- No create action in the header
+- Groups settings by entity type
+- Settings are displayed with status colors for easy identification
+
+### EditLoyaltyPointSetting Page
+[Page File](mdc:app/Filament/Resources/LoyaltyPointSettingResource/Pages/EditLoyaltyPointSetting.php)
+
+- Allows editing existing loyalty point settings
+- Fields include:
+  - Entity Type (GP/Booking Agent)
+  - Referral Status
+  - Points
+  - Description
+  - Active status
+
+## Important Constraints
+
+1. Each combination of entity type and referral status must have exactly one setting
+2. New settings cannot be created through the admin interface
+3. Existing settings can be edited or deactivated, but not deleted
+4. The points value must be a non-negative integer
+
+## Navigation
+
+The loyalty point settings page is accessible at:
+```
+http://localhost:8000/admin/loyalty-point-settings
+```
+
+It is located in the "Referral Management" navigation group with a star icon.
+

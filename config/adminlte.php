@@ -321,8 +321,15 @@ return [
             'can' => 'manage-blog',
         ],
         [
+            'header' => 'SYSTEM ADMINISTRATION',
+            'classes' => 'text-bold text-uppercase bg-orange',
+            'can' => 'super-admin',
+        ],
+        [
             'text' => 'Admin Management',
             'icon' => 'fas fa-fw fa-cogs',
+            'classes' => 'text-bold bg-light text-dark',
+            'can' => 'super-admin',
             'submenu' => [
                 [
                     'text' => 'Hospitals',
@@ -333,28 +340,114 @@ return [
                     'text' => 'Specialties',
                     'url' => 'admin/specialties',
                     'icon' => 'fas fa-fw fa-stethoscope',
+                    'active' => ['admin/specialties*'],
                 ],
                 [
                     'text' => 'Consultants',
                     'url' => 'admin/consultants',
                     'icon' => 'fas fa-fw fa-user-md',
+                    'active' => ['admin/consultants*'],
                 ],
                 [
                     'text' => 'Services',
-                    'url' => 'admin/services', 
+                    'url' => 'admin/services',
                     'icon' => 'fas fa-fw fa-clipboard-list',
+                    'active' => ['admin/services*'],
                 ],
                 [
                     'text' => 'Clinics',
                     'url' => 'admin/clinics',
                     'icon' => 'fas fa-fw fa-clinic-medical',
+                    'active' => ['admin/clinics*'],
                 ],
                 [
-                    'text' => 'GP',
-                    'url' => 'admin/gp',
+                    'text' => 'GPs',
+                    'url' => 'admin/gps',
                     'icon' => 'fas fa-fw fa-user-nurse',
+                    'active' => ['admin/gps*'],
                 ],
             ],
+        ],
+        [
+            'header' => 'AGENT ADMINISTRATION',
+            'classes' => 'text-bold text-uppercase bg-orange',
+            'can' => 'super-admin',
+        ],
+        [
+            'text' => 'Booking Agent Management',
+            'icon' => 'fas fa-fw fa-users-cog',
+            'classes' => 'text-bold bg-light text-dark',
+            'can' => 'super-admin',
+            'submenu' => [
+                [
+                    'text' => 'Companies',
+                    'url' => 'admin/companies',
+                    'icon' => 'fas fa-fw fa-building',
+                    'active' => ['admin/companies*'],
+                ],
+                [
+                    'text' => 'Booking Agents',
+                    'url' => 'admin/booking-agents',
+                    'icon' => 'fas fa-fw fa-user-tie',
+                    'active' => ['admin/booking-agents*'],
+                ],
+            ],
+        ],
+        [
+            'header' => 'REFERRAL MANAGEMENT',
+            'classes' => 'text-bold text-uppercase bg-orange',
+            'can' => 'super-admin',
+        ],
+        [
+            'text' => 'Referral Management',
+            'icon' => 'fas fa-fw fa-exchange-alt',
+            'classes' => 'text-bold bg-light text-dark',
+            'can' => 'super-admin',
+            'submenu' => [
+                [
+                    'text' => 'Referrals',
+                    'url' => 'admin/referrals',
+                    'icon' => 'fas fa-fw fa-file-medical',
+                    'active' => ['admin/referrals*'],
+                ],
+                [
+                    'text' => 'Loyalty Points',
+                    'url' => 'admin/loyalty-point-settings',
+                    'icon' => 'fas fa-fw fa-star',
+                    'active' => ['admin/loyalty-point-settings*'],
+                ],
+                [
+                    'text' => 'GP Loyalty Points',
+                    'url' => 'admin/gp-loyalty-points',
+                    'icon' => 'fas fa-fw fa-user-md',
+                    'active' => ['admin/gp-loyalty-points*'],
+                ],
+                [
+                    'text' => 'Booking Agent Loyalty Points',
+                    'url' => 'admin/booking-agent-loyalty-points',
+                    'icon' => 'fas fa-fw fa-user-tie',
+                    'active' => ['admin/booking-agent-loyalty-points*'],
+                ],
+            ],
+        ],
+        [
+            'header' => 'DOCTOR DASHBOARD',
+            'classes' => 'text-bold text-uppercase bg-orange',
+            'can' => 'gp-doctor',
+        ],
+        [
+            'text' => 'Referrals',
+            'url' => 'doctor/referrals',
+            'icon' => 'fas fa-fw fa-file-medical',
+            'can' => 'gp-doctor',
+            'active' => ['doctor/referrals*'],
+        ],
+        [
+            'text' => 'GP Loyalty Points',
+            'url' => 'doctor/loyalty-points',
+            'icon' => 'fas fa-fw fa-star',
+            'can' => 'gp-doctor',
+            'active' => ['doctor/loyalty-points*'],
         ],
     ],
 
