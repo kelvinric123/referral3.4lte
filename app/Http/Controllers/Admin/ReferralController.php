@@ -84,6 +84,9 @@ class ReferralController extends Controller
                 $this->storeDocument($file, $referral);
             }
         }
+        
+        // Update loyalty points for the new referral
+        $referral->updateLoyaltyPoints();
 
         return redirect()->route('admin.referrals.index')
             ->with('success', 'Referral created successfully.');

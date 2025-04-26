@@ -34,6 +34,17 @@ class Referral extends Model
     ];
 
     /**
+     * The "booted" method of the model.
+     */
+    protected static function booted()
+    {
+        // When a new referral is created, automatically update loyalty points
+        static::created(function ($referral) {
+            $referral->updateLoyaltyPoints();
+        });
+    }
+
+    /**
      * Get the hospital associated with the referral.
      */
     public function hospital()
