@@ -431,6 +431,25 @@ return [
             ],
         ],
         [
+            'header' => 'GP REFERRAL PROGRAM',
+            'classes' => 'text-bold text-uppercase bg-orange',
+            'can' => 'super-admin',
+        ],
+        [
+            'text' => 'GP Referral Program',
+            'icon' => 'fas fa-fw fa-project-diagram',
+            'classes' => 'text-bold bg-light text-dark',
+            'can' => 'super-admin',
+            'submenu' => [
+                [
+                    'text' => 'List',
+                    'url' => 'admin/gp-referral-programs',
+                    'icon' => 'fas fa-fw fa-list',
+                    'active' => ['admin/gp-referral-programs*'],
+                ],
+            ],
+        ],
+        [
             'header' => 'DOCTOR DASHBOARD',
             'classes' => 'text-bold text-uppercase bg-orange',
             'can' => 'gp-doctor',

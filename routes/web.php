@@ -68,6 +68,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:super-admin'])
         ->name('booking-agent-loyalty-points.index');
     Route::get('booking-agent-loyalty-points/{id}', [App\Http\Controllers\Admin\BookingAgentLoyaltyPointController::class, 'show'])
         ->name('booking-agent-loyalty-points.show');
+    
+    // GP Referral Program Routes
+    Route::resource('gp-referral-programs', App\Http\Controllers\Admin\GPReferralProgramController::class)
+        ->names('gp-referral-programs');
 });
 
 // Hospital Admin Routes
