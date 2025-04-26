@@ -72,6 +72,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:super-admin'])
     // GP Referral Program Routes
     Route::resource('gp-referral-programs', App\Http\Controllers\Admin\GPReferralProgramController::class)
         ->names('gp-referral-programs');
+    Route::post('gp-referral-programs/{gpReferralProgram}/participation', [App\Http\Controllers\Admin\GPReferralProgramController::class, 'recordParticipation'])
+        ->name('gp-referral-programs.participation');
+    Route::post('gp-referral-programs/{gpReferralProgram}/attendance', [App\Http\Controllers\Admin\GPReferralProgramController::class, 'recordAttendance'])
+        ->name('gp-referral-programs.attendance');
 });
 
 // Hospital Admin Routes
@@ -96,6 +100,12 @@ Route::prefix('doctor')->name('doctor.')->middleware(['auth', 'role:gp-doctor'])
     
     // Loyalty Points
     Route::get('/loyalty-points', [App\Http\Controllers\Doctor\LoyaltyPointController::class, 'index'])->name('loyalty-points.index');
+    
+    // GP Referral Programs
+    Route::get('/gp-referral-programs', [App\Http\Controllers\Doctor\GPReferralProgramController::class, 'index'])->name('gp-referral-programs.index');
+    Route::get('/gp-referral-programs/{gpReferralProgram}', [App\Http\Controllers\Doctor\GPReferralProgramController::class, 'show'])->name('gp-referral-programs.show');
+    Route::post('/gp-referral-programs/{gpReferralProgram}/participate', [App\Http\Controllers\Doctor\GPReferralProgramController::class, 'participate'])->name('gp-referral-programs.participate');
+    Route::post('/gp-referral-programs/{gpReferralProgram}/attend', [App\Http\Controllers\Doctor\GPReferralProgramController::class, 'attend'])->name('gp-referral-programs.attend');
 });
 
 // Booking Agent Routes

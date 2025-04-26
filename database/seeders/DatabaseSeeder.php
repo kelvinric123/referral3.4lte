@@ -31,6 +31,7 @@ class DatabaseSeeder extends Seeder
             CompanySeeder::class,
             BookingAgentSeeder::class,
             LoyaltyPointSettingSeeder::class,
+            GPReferralProgramSeeder::class,
         ]);
     }
 }

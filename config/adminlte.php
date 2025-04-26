@@ -468,6 +468,18 @@ return [
             'can' => 'gp-doctor',
             'active' => ['doctor/loyalty-points*'],
         ],
+        [
+            'header' => 'GP REFERRAL PROGRAM',
+            'classes' => 'text-bold text-uppercase bg-orange',
+            'can' => 'gp-doctor',
+        ],
+        [
+            'text' => 'Referral Programs',
+            'url' => 'doctor/gp-referral-programs',
+            'icon' => 'fas fa-fw fa-clipboard-list',
+            'can' => 'gp-doctor',
+            'active' => ['doctor/gp-referral-programs*'],
+        ],
     ],
 
     /*

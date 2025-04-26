@@ -93,6 +93,147 @@
                 <!-- /.card -->
             </div>
         </div>
+
+        @if(session('success'))
+            <div class="row">
+                <div class="col-12">
+                    <div class="alert alert-success alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                        <h5><i class="icon fas fa-check"></i> Success!</h5>
+                        {{ session('success') }}
+                    </div>
+                </div>
+            </div>
+        @endif
+
+        <!-- GP Participation -->
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Record GP Participation</h3>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted">
+                            <i class="fas fa-info-circle"></i> When a GP participates in this referral program, 
+                            they will earn <strong>20 loyalty points</strong>.
+                        </p>
+                        
+                        <form action="{{ route('admin.gp-referral-programs.participation', $gpReferralProgram) }}" method="POST">
+                            @csrf
+                            <div class="form-group">
+                                <label>Select GPs who participated:</label>
+                                <select class="form-control select2" name="gp_ids[]" multiple="multiple" data-placeholder="Select GPs" style="width: 100%;">
+                                    @foreach($gps as $gp)
+                                        <option value="{{ $gp->id }}">{{ $gp->name }} ({{ $gp->email }})</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Record Participation & Award Points</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Record GP Attendance</h3>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted">
+                            <i class="fas fa-info-circle"></i> When a GP attends this referral program, 
+                            they will earn <strong>40 loyalty points</strong>. 
+                            (They'll also be automatically marked as participated if not already)
+                        </p>
+                        
+                        <form action="{{ route('admin.gp-referral-programs.attendance', $gpReferralProgram) }}" method="POST">
+                            @csrf
+                            <div class="form-group">
+                                <label>Select GPs who attended:</label>
+                                <select class="form-control select2" name="gp_ids[]" multiple="multiple" data-placeholder="Select GPs" style="width: 100%;">
+                                    @foreach($gps as $gp)
+                                        <option value="{{ $gp->id }}">{{ $gp->name }} ({{ $gp->email }})</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-success">Record Attendance & Award Points</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- GP Participation and Attendance Lists -->
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">GP Participants</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>GP Name</th>
+                                        <th>Email</th>
+                                        <th>Participated On</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse($participants as $participant)
+                                        <tr>
+                                            <td>{{ $participant->name }}</td>
+                                            <td>{{ $participant->email }}</td>
+                                            <td>{{ $participant->pivot->created_at->format('d M Y H:i') }}</td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="3" class="text-center">No participants yet.</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">GP Attendees</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>GP Name</th>
+                                        <th>Email</th>
+                                        <th>Attended On</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse($attendees as $attendee)
+                                        <tr>
+                                            <td>{{ $attendee->name }}</td>
+                                            <td>{{ $attendee->email }}</td>
+                                            <td>{{ $attendee->pivot->created_at->format('d M Y H:i') }}</td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="3" class="text-center">No attendees yet.</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 @stop
 
@@ -114,6 +255,17 @@
                     ['view', ['fullscreen', 'codeview']]
                 ]
             });
+            
+            // Initialize Select2 Elements
+            $('.select2').select2({
+                theme: 'bootstrap4',
+                width: '100%'
+            });
+            
+            // Auto-hide success alerts after 5 seconds
+            setTimeout(function() {
+                $('.alert-success').fadeOut('slow');
+            }, 5000);
         });
     </script>
 @stop 

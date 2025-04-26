@@ -34,8 +34,8 @@ class ReferralController extends Controller
     public function create()
     {
         $hospitals = Hospital::where('is_active', true)->get();
-        $specialties = Specialty::where('is_active', true)->get();
-        $consultants = Consultant::where('is_active', true)->get();
+        $specialties = Specialty::with('hospital')->where('is_active', true)->get();
+        $consultants = Consultant::with(['specialty', 'hospital'])->where('is_active', true)->get();
         $gps = GP::where('is_active', true)->get();
         $bookingAgents = BookingAgent::where('is_active', true)->get();
         
@@ -76,6 +76,9 @@ class ReferralController extends Controller
             'documents.*' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:10240',
         ]);
 
+        // Ensure patient name is stored in uppercase
+        $validated['patient_name'] = strtoupper($validated['patient_name']);
+
         $referral = Referral::create($validated);
         
         // Handle document uploads
@@ -85,8 +88,7 @@ class ReferralController extends Controller
             }
         }
         
-        // Update loyalty points for the new referral
-        $referral->updateLoyaltyPoints();
+        // Loyalty points are automatically added via the Referral model's created event
 
         return redirect()->route('admin.referrals.index')
             ->with('success', 'Referral created successfully.');
@@ -114,8 +116,8 @@ class ReferralController extends Controller
     public function edit(Referral $referral)
     {
         $hospitals = Hospital::where('is_active', true)->get();
-        $specialties = Specialty::where('is_active', true)->get();
-        $consultants = Consultant::where('is_active', true)->get();
+        $specialties = Specialty::with('hospital')->where('is_active', true)->get();
+        $consultants = Consultant::with(['specialty', 'hospital'])->where('is_active', true)->get();
         $gps = GP::where('is_active', true)->get();
         $bookingAgents = BookingAgent::where('is_active', true)->get();
         
@@ -156,6 +158,9 @@ class ReferralController extends Controller
             'status' => 'required|in:Pending,Approved,Rejected,No Show,Completed',
             'documents.*' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:10240',
         ]);
+
+        // Ensure patient name is stored in uppercase
+        $validated['patient_name'] = strtoupper($validated['patient_name']);
 
         $oldStatus = $referral->status;
         $referral->update($validated);

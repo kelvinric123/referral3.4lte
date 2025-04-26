@@ -36,4 +36,40 @@ class GP extends Model
     {
         return $this->belongsTo(Clinic::class);
     }
+    
+    /**
+     * Get the GP referral program actions for this GP.
+     */
+    public function gpReferralProgramActions()
+    {
+        return $this->hasMany(GPReferralProgramAction::class, 'gp_id');
+    }
+    
+    /**
+     * Get the GP referral programs that this GP has participated in.
+     */
+    public function participatedPrograms()
+    {
+        return $this->belongsToMany(GPReferralProgram::class, 'gp_referral_program_actions')
+            ->where('action_type', 'participated')
+            ->withTimestamps();
+    }
+    
+    /**
+     * Get the GP referral programs that this GP has attended.
+     */
+    public function attendedPrograms()
+    {
+        return $this->belongsToMany(GPReferralProgram::class, 'gp_referral_program_actions')
+            ->where('action_type', 'attended')
+            ->withTimestamps();
+    }
+    
+    /**
+     * Get all loyalty points for this GP.
+     */
+    public function loyaltyPoints()
+    {
+        return $this->morphMany(LoyaltyPoint::class, 'pointable');
+    }
 } 

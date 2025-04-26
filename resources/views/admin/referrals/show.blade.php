@@ -69,11 +69,14 @@
                     <div class="row">
                         <div class="col-md-12">
                             <dl>
-                                <dt>Medical Condition</dt>
-                                <dd>{{ $referral->medical_condition }}</dd>
+                                <dt>Diagnosis/Condition</dt>
+                                <dd>{{ $referral->diagnosis ?? 'N/A' }}</dd>
                                 
-                                <dt>Notes</dt>
-                                <dd>{{ $referral->notes ?? 'No additional notes' }}</dd>
+                                <dt>Clinical History</dt>
+                                <dd>{{ $referral->clinical_history ?? 'None provided' }}</dd>
+                                
+                                <dt>Additional Remarks</dt>
+                                <dd>{{ $referral->remarks ?? 'None provided' }}</dd>
                             </dl>
                         </div>
                     </div>
@@ -175,6 +178,19 @@
                         
                         <dt>Specialty</dt>
                         <dd>{{ $referral->specialty->name ?? 'N/A' }}</dd>
+                        
+                        <dt>Consultant</dt>
+                        @if($referral->consultant)
+                            <dd>
+                                {{ $referral->consultant->name }}
+                                <div class="small text-muted">
+                                    {{ ucfirst($referral->consultant->gender) }} | 
+                                    {{ implode(', ', $referral->consultant->languages) }}
+                                </div>
+                            </dd>
+                        @else
+                            <dd>N/A</dd>
+                        @endif
                     </dl>
                 </div>
             </div>

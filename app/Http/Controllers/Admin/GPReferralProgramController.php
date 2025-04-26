@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\GPReferralProgram;
+use App\Models\GP;
+use App\Models\GPReferralProgramAction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -64,7 +66,11 @@ class GPReferralProgramController extends Controller
      */
     public function edit(GPReferralProgram $gpReferralProgram)
     {
-        return view('admin.gp-referral-programs.edit', compact('gpReferralProgram'));
+        $participants = $gpReferralProgram->participants()->get();
+        $attendees = $gpReferralProgram->attendees()->get();
+        $gps = GP::where('is_active', true)->get();
+        
+        return view('admin.gp-referral-programs.edit', compact('gpReferralProgram', 'participants', 'attendees', 'gps'));
     }
 
     /**
@@ -101,5 +107,69 @@ class GPReferralProgramController extends Controller
 
         return redirect()->route('admin.gp-referral-programs.index')
             ->with('success', 'GP Referral Program deleted successfully.');
+    }
+
+    /**
+     * Record GP participation in a program.
+     */
+    public function recordParticipation(Request $request, GPReferralProgram $gpReferralProgram)
+    {
+        $validated = $request->validate([
+            'gp_ids' => 'required|array',
+            'gp_ids.*' => 'exists:gps,id',
+        ]);
+        
+        foreach ($validated['gp_ids'] as $gpId) {
+            $action = GPReferralProgramAction::firstOrCreate([
+                'gp_id' => $gpId,
+                'gp_referral_program_id' => $gpReferralProgram->id,
+                'action_type' => 'participated',
+            ], [
+                'points_awarded' => false,
+            ]);
+            
+            // Award loyalty points
+            $action->awardPoints();
+        }
+        
+        return redirect()->route('admin.gp-referral-programs.edit', $gpReferralProgram)
+            ->with('success', 'GP participation recorded and loyalty points awarded.');
+    }
+    
+    /**
+     * Record GP attendance in a program.
+     */
+    public function recordAttendance(Request $request, GPReferralProgram $gpReferralProgram)
+    {
+        $validated = $request->validate([
+            'gp_ids' => 'required|array',
+            'gp_ids.*' => 'exists:gps,id',
+        ]);
+        
+        foreach ($validated['gp_ids'] as $gpId) {
+            // First, ensure the GP is marked as participated
+            GPReferralProgramAction::firstOrCreate([
+                'gp_id' => $gpId,
+                'gp_referral_program_id' => $gpReferralProgram->id,
+                'action_type' => 'participated',
+            ], [
+                'points_awarded' => false,
+            ])->awardPoints();
+            
+            // Then mark them as attended
+            $action = GPReferralProgramAction::firstOrCreate([
+                'gp_id' => $gpId,
+                'gp_referral_program_id' => $gpReferralProgram->id,
+                'action_type' => 'attended',
+            ], [
+                'points_awarded' => false,
+            ]);
+            
+            // Award loyalty points
+            $action->awardPoints();
+        }
+        
+        return redirect()->route('admin.gp-referral-programs.edit', $gpReferralProgram)
+            ->with('success', 'GP attendance recorded and loyalty points awarded.');
     }
 }

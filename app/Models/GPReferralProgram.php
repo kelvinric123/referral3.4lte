@@ -38,4 +38,32 @@ class GPReferralProgram extends Model
         'publish_date' => 'date',
         'is_active' => 'boolean',
     ];
+    
+    /**
+     * Get the actions associated with this GP referral program.
+     */
+    public function actions()
+    {
+        return $this->hasMany(GPReferralProgramAction::class, 'gp_referral_program_id');
+    }
+    
+    /**
+     * Get the GPs who have participated in this program.
+     */
+    public function participants()
+    {
+        return $this->belongsToMany(GP::class, 'gp_referral_program_actions')
+            ->where('action_type', 'participated')
+            ->withTimestamps();
+    }
+    
+    /**
+     * Get the GPs who have attended this program.
+     */
+    public function attendees()
+    {
+        return $this->belongsToMany(GP::class, 'gp_referral_program_actions')
+            ->where('action_type', 'attended')
+            ->withTimestamps();
+    }
 }

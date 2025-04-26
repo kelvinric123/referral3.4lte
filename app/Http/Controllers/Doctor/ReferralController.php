@@ -106,8 +106,7 @@ class ReferralController extends Controller
 
         $referral = Referral::create($validated);
 
-        // Trigger loyalty points update
-        $referral->updateLoyaltyPoints();
+        // Loyalty points are automatically added via the Referral model's created event
 
         return redirect()->route('doctor.referrals.index')
             ->with('success', 'Referral created successfully.');

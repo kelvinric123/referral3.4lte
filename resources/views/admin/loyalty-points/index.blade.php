@@ -115,9 +115,12 @@
                 <li><strong>Approved:</strong> When a referral is approved by hospital</li>
                 <li><strong>Rejected:</strong> When a referral is rejected</li>
                 <li><strong>No Show:</strong> When a patient doesn't attend the appointment</li>
-                <li><strong>Completed:</strong> When a patient completes their appointment</li>
+                <li><strong>Completed:</strong> When a referral is completed</li>
+                <li><strong>GP Referral Program Participated:</strong> When GP participated in the GP referral program</li>
+                <li><strong>GP Referral Program Attended:</strong> When GP attended the GP referral program</li>
             </ul>
             <p>Settings cannot be deleted or created to maintain system consistency.</p>
+            <p>GP Referral Program settings are connected to the <a href="{{ route('admin.gp-referral-programs.index') }}">GP Referral Programs</a> section.</p>
         </div>
     </div>
 @stop
