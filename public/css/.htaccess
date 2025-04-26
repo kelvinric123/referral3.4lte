@@ -1,0 +1,11 @@
+<IfModule mod_mime.c>
+    # Force correct MIME type for CSS files
+    AddType text/css .css
+</IfModule>
+
+<IfModule mod_headers.c>
+    # Set Content-Type header for CSS files
+    <FilesMatch "\.css$">
+        Header set Content-Type "text/css"
+    </FilesMatch>
+</IfModule> 
