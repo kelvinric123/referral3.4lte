@@ -486,6 +486,76 @@ return [
             'can' => 'gp-doctor',
             'active' => ['doctor/gp-referral-programs*'],
         ],
+        
+        // Hospital Admin Dashboard
+        [
+            'header' => 'HOSPITAL ADMINISTRATION',
+            'classes' => 'text-bold text-uppercase bg-orange',
+            'can' => 'hospital-admin',
+        ],
+        [
+            'text' => 'Admin Management',
+            'icon' => 'fas fa-fw fa-cogs',
+            'classes' => 'text-bold bg-light text-dark',
+            'can' => 'hospital-admin',
+            'submenu' => [
+                [
+                    'text' => 'My Hospital',
+                    'url' => 'hospital/hospital',
+                    'icon' => 'fas fa-fw fa-hospital',
+                    'active' => ['hospital/hospital*'],
+                ],
+                [
+                    'text' => 'Specialties',
+                    'url' => 'hospital/specialties',
+                    'icon' => 'fas fa-fw fa-stethoscope',
+                    'active' => ['hospital/specialties*'],
+                ],
+                [
+                    'text' => 'Consultants',
+                    'url' => 'hospital/consultants',
+                    'icon' => 'fas fa-fw fa-user-md',
+                    'active' => ['hospital/consultants*'],
+                ],
+                [
+                    'text' => 'Services',
+                    'url' => 'hospital/services',
+                    'icon' => 'fas fa-fw fa-clipboard-list',
+                    'active' => ['hospital/services*'],
+                ],
+                [
+                    'text' => 'Clinics',
+                    'url' => 'hospital/clinics',
+                    'icon' => 'fas fa-fw fa-clinic-medical',
+                    'active' => ['hospital/clinics*'],
+                ],
+                [
+                    'text' => 'GPs',
+                    'url' => 'hospital/gps',
+                    'icon' => 'fas fa-fw fa-user-nurse',
+                    'active' => ['hospital/gps*'],
+                ],
+            ],
+        ],
+        [
+            'header' => 'REFERRAL MANAGEMENT',
+            'classes' => 'text-bold text-uppercase bg-orange',
+            'can' => 'hospital-admin',
+        ],
+        [
+            'text' => 'Referral Management',
+            'icon' => 'fas fa-fw fa-exchange-alt',
+            'classes' => 'text-bold bg-light text-dark',
+            'can' => 'hospital-admin',
+            'submenu' => [
+                [
+                    'text' => 'Referrals',
+                    'url' => 'hospital/referrals',
+                    'icon' => 'fas fa-fw fa-file-medical',
+                    'active' => ['hospital/referrals*'],
+                ],
+            ],
+        ],
     ],
 
     /*

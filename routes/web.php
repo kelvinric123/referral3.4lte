@@ -95,6 +95,29 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:super-admin'])
 // Hospital Admin Routes
 Route::prefix('hospital')->name('hospital.')->middleware(['auth', 'role:hospital-admin'])->group(function () {
     Route::get('/dashboard', [HospitalDashboardController::class, 'index'])->name('dashboard');
+    
+    // Hospital Management
+    Route::get('/hospital', [App\Http\Controllers\Hospital\HospitalController::class, 'show'])->name('my-hospital');
+    Route::get('/hospital/edit', [App\Http\Controllers\Hospital\HospitalController::class, 'edit'])->name('my-hospital.edit');
+    Route::put('/hospital/update', [App\Http\Controllers\Hospital\HospitalController::class, 'update'])->name('my-hospital.update');
+    
+    // Specialty Management
+    Route::resource('specialties', App\Http\Controllers\Hospital\SpecialtyController::class)->names('specialties');
+    
+    // Consultant Management
+    Route::resource('consultants', App\Http\Controllers\Hospital\ConsultantController::class)->names('consultants');
+    
+    // Service Management
+    Route::resource('services', App\Http\Controllers\Hospital\ServiceController::class)->names('services');
+    
+    // Clinic Management
+    Route::resource('clinics', App\Http\Controllers\Hospital\ClinicController::class)->names('clinics');
+    
+    // GP Management
+    Route::resource('gps', App\Http\Controllers\Hospital\GPController::class)->names('gps');
+    
+    // Referral Management
+    Route::resource('referrals', App\Http\Controllers\Hospital\ReferralController::class)->names('referrals');
 });
 
 // Consultant Routes
