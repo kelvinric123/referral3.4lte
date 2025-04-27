@@ -121,6 +121,17 @@ Route::prefix('hospital')->name('hospital.')->middleware(['auth', 'role:hospital
     
     // Referral Management
     Route::resource('referrals', App\Http\Controllers\Hospital\ReferralController::class)->names('referrals');
+    
+    // Loyalty Points Routes
+    Route::get('/loyalty-points', [App\Http\Controllers\Hospital\LoyaltyPointController::class, 'index'])->name('loyalty-points.index');
+    
+    // GP Loyalty Points Routes
+    Route::get('/gp-loyalty-points', [App\Http\Controllers\Hospital\GPLoyaltyPointController::class, 'index'])->name('gp-loyalty-points.index');
+    Route::get('/gp-loyalty-points/{id}', [App\Http\Controllers\Hospital\GPLoyaltyPointController::class, 'show'])->name('gp-loyalty-points.show');
+    
+    // Booking Agent Loyalty Points Routes
+    Route::get('/booking-agent-loyalty-points', [App\Http\Controllers\Hospital\BookingAgentLoyaltyPointController::class, 'index'])->name('booking-agent-loyalty-points.index');
+    Route::get('/booking-agent-loyalty-points/{id}', [App\Http\Controllers\Hospital\BookingAgentLoyaltyPointController::class, 'show'])->name('booking-agent-loyalty-points.show');
 });
 
 // Consultant Routes
