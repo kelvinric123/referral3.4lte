@@ -34,6 +34,10 @@ Route::post('/gp/login', [App\Http\Controllers\Auth\GPLoginController::class, 'l
 Route::get('/hospital/login', [App\Http\Controllers\Auth\HospitalLoginController::class, 'showLoginForm'])->name('hospital.login.form');
 Route::post('/hospital/login', [App\Http\Controllers\Auth\HospitalLoginController::class, 'login'])->name('hospital.login');
 
+// Consultant Authentication Routes
+Route::get('/consultant/login', [App\Http\Controllers\Auth\ConsultantLoginController::class, 'showLoginForm'])->name('consultant.login.form');
+Route::post('/consultant/login', [App\Http\Controllers\Auth\ConsultantLoginController::class, 'login'])->name('consultant.login');
+
 // Default home route
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
@@ -135,8 +139,8 @@ Route::prefix('hospital')->name('hospital.')->middleware(['auth', 'role:hospital
 });
 
 // Consultant Routes
-Route::prefix('consultant')->group(function () {
-    Route::get('/dashboard', [ConsultantDashboardController::class, 'index'])->name('consultant.dashboard');
+Route::prefix('consultant')->name('consultant.')->middleware(['auth', 'role:consultant,super-admin'])->group(function () {
+    Route::get('/dashboard', [ConsultantDashboardController::class, 'index'])->name('dashboard');
 });
 
 // GP Doctor Routes
