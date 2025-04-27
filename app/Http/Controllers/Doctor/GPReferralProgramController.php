@@ -112,52 +112,8 @@ class GPReferralProgramController extends Controller
      */
     public function attend(GPReferralProgram $gpReferralProgram)
     {
-        // Get the currently logged-in GP
-        $gp = GP::where('email', Auth::user()->email)->first();
-        
-        if (!$gp) {
-            return redirect()->route('doctor.dashboard')
-                ->with('error', 'No GP profile found for your account.');
-        }
-        
-        // First ensure the GP is marked as participated
-        $participationAction = GPReferralProgramAction::firstOrCreate(
-            [
-                'gp_id' => $gp->id,
-                'gp_referral_program_id' => $gpReferralProgram->id,
-                'action_type' => 'participated',
-            ],
-            [
-                'points_awarded' => false,
-            ]
-        );
-        
-        // Award participation points if not already awarded
-        $participationAction->awardPoints();
-        
-        // Check if already attended
-        $attendanceAction = GPReferralProgramAction::where('gp_id', $gp->id)
-            ->where('gp_referral_program_id', $gpReferralProgram->id)
-            ->where('action_type', 'attended')
-            ->first();
-            
-        if ($attendanceAction) {
-            return redirect()->route('doctor.gp-referral-programs.show', $gpReferralProgram)
-                ->with('info', 'You are already marked as having attended this program.');
-        }
-        
-        // Create attendance record
-        $attendanceAction = GPReferralProgramAction::create([
-            'gp_id' => $gp->id,
-            'gp_referral_program_id' => $gpReferralProgram->id,
-            'action_type' => 'attended',
-            'points_awarded' => false,
-        ]);
-        
-        // Award the loyalty points
-        $attendanceAction->awardPoints();
-        
+        // Redirect with message explaining that only administrators can mark attendance
         return redirect()->route('doctor.gp-referral-programs.show', $gpReferralProgram)
-            ->with('success', 'Your attendance has been recorded and you have received loyalty points!');
+            ->with('info', 'Attendance can only be recorded by administrators. Please contact them if you attended this program.');
     }
 } 

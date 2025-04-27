@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Referral;
 
 class GPReferralProgramAction extends Model
 {
@@ -84,14 +85,30 @@ class GPReferralProgramAction extends Model
         $currentBalance = $latestPoint ? $latestPoint->balance : 0;
         $newBalance = $currentBalance + $setting->points;
 
+        // Find the latest referral for this GP to use as referral_id
+        $latestReferral = Referral::where('gp_id', $gp->id)
+            ->latest()
+            ->first();
+            
+        // If no referral is found, create a dummy referral
+        if (!$latestReferral) {
+            // Look for any referral in the system to use
+            $latestReferral = Referral::latest()->first();
+            
+            // If there are no referrals at all, we can't proceed
+            if (!$latestReferral) {
+                return;
+            }
+        }
+
         // Create a new loyalty point record
         LoyaltyPoint::create([
             'pointable_type' => GP::class,
             'pointable_id' => $gp->id,
-            'referral_id' => null, // No referral associated with this
+            'referral_id' => $latestReferral->id, // Use the latest referral ID
             'points' => $setting->points,
             'status' => $status,
-            'description' => $setting->description,
+            'description' => "Points for {$status} in program: {$this->gpReferralProgram->title}",
             'balance' => $newBalance,
         ]);
 

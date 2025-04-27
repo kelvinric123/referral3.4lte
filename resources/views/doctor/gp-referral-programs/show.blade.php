@@ -60,9 +60,37 @@
                                 <div class="mt-4">
                                     <h4>Video</h4>
                                     <div class="embed-responsive embed-responsive-16by9">
-                                        <iframe class="embed-responsive-item" 
-                                                src="{{ str_replace('watch?v=', 'embed/', $gpReferralProgram->youtube_link) }}" 
-                                                allowfullscreen></iframe>
+                                        @php
+                                            // Extract video ID from YouTube URL - more reliable method
+                                            $videoId = null;
+                                            if (preg_match('/(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/', $gpReferralProgram->youtube_link, $matches)) {
+                                                $videoId = $matches[1];
+                                            }
+                                        @endphp
+                                        
+                                        @if($videoId)
+                                            <iframe class="embed-responsive-item" 
+                                                src="https://www.youtube.com/embed/{{ $videoId }}?rel=0" 
+                                                allowfullscreen 
+                                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                onerror="this.style.display='none'; document.getElementById('youtube-fallback-{{ $videoId }}').style.display='block';">
+                                            </iframe>
+                                            <div id="youtube-fallback-{{ $videoId }}" style="display:none;" class="text-center p-4 bg-light">
+                                                <i class="fab fa-youtube fa-3x text-danger mb-3"></i>
+                                                <p>The video couldn't be loaded. This may be due to YouTube's privacy settings or a temporary issue.</p>
+                                                <a href="{{ $gpReferralProgram->youtube_link }}" target="_blank" class="btn btn-danger">
+                                                    <i class="fab fa-youtube"></i> Open on YouTube
+                                                </a>
+                                            </div>
+                                        @else
+                                            <div class="text-center p-4 bg-light">
+                                                <i class="fab fa-youtube fa-3x text-danger mb-3"></i>
+                                                <p>Invalid YouTube link format. Please open the video directly on YouTube.</p>
+                                                <a href="{{ $gpReferralProgram->youtube_link }}" target="_blank" class="btn btn-danger">
+                                                    <i class="fab fa-youtube"></i> Open on YouTube
+                                                </a>
+                                            </div>
+                                        @endif
                                     </div>
                                 </div>
                             @endif
@@ -109,14 +137,9 @@
                                 </div>
                             @else
                                 <div class="alert alert-info">
-                                    <i class="fas fa-info-circle mr-2"></i> Mark your attendance to earn additional <strong>40 loyalty points</strong>.
+                                    <i class="fas fa-info-circle mr-2"></i> Attendance for this program will be recorded by administrators after the event.
                                 </div>
-                                <form action="{{ route('doctor.gp-referral-programs.attend', $gpReferralProgram) }}" method="POST">
-                                    @csrf
-                                    <button type="submit" class="btn btn-success btn-lg">
-                                        <i class="fas fa-calendar-check mr-2"></i> Mark Attendance
-                                    </button>
-                                </form>
+                                <p class="text-muted">Once your attendance is confirmed by the administrator, you will receive 40 loyalty points.</p>
                             @endif
                         </div>
                     </div>
@@ -133,6 +156,14 @@
         setTimeout(function() {
             $('.alert').fadeOut('slow');
         }, 5000);
+        
+        // Handle YouTube iframe loading errors
+        $('iframe.embed-responsive-item').on('error', function() {
+            var iframe = $(this);
+            var videoId = iframe.attr('src').split('/').pop().split('?')[0];
+            iframe.hide();
+            $('#youtube-fallback-' + videoId).show();
+        });
     });
 </script>
 @stop 
