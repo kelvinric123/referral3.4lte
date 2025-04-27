@@ -19,11 +19,21 @@ class Hospital extends Model
         'phone',
         'email',
         'website',
+        'password',
         'is_active',
     ];
     
     protected $casts = [
         'is_active' => 'boolean',
+    ];
+
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
+    protected $hidden = [
+        'password',
     ];
 
     /**
