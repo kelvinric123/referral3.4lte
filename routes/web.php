@@ -76,6 +76,16 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:super-admin'])
         ->name('gp-referral-programs.participation');
     Route::post('gp-referral-programs/{gpReferralProgram}/attendance', [App\Http\Controllers\Admin\GPReferralProgramController::class, 'recordAttendance'])
         ->name('gp-referral-programs.attendance');
+    
+    // GP Referral Program Participation Routes
+    Route::get('gp-referral-program-participation', [App\Http\Controllers\Admin\GPReferralProgramParticipationController::class, 'index'])
+        ->name('gp-referral-program-participation.index');
+    Route::get('gp-referral-program-participation/{program}', [App\Http\Controllers\Admin\GPReferralProgramParticipationController::class, 'show'])
+        ->name('gp-referral-program-participation.show');
+    Route::post('gp-referral-program-participation/{program}/record-participation', [App\Http\Controllers\Admin\GPReferralProgramParticipationController::class, 'recordParticipation'])
+        ->name('gp-referral-program-participation.record-participation');
+    Route::post('gp-referral-program-participation/{program}/record-attendance', [App\Http\Controllers\Admin\GPReferralProgramParticipationController::class, 'recordAttendance'])
+        ->name('gp-referral-program-participation.record-attendance');
 });
 
 // Hospital Admin Routes

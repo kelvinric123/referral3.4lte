@@ -15,7 +15,7 @@ class GPReferralProgramAction extends Model
      *
      * @var string
      */
-    protected $table = 'g_p_referral_program_actions';
+    protected $table = 'gp_referral_program_actions';
 
     protected $fillable = [
         'gp_id',

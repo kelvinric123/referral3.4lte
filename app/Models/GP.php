@@ -50,7 +50,7 @@ class GP extends Model
      */
     public function participatedPrograms()
     {
-        return $this->belongsToMany(GPReferralProgram::class, 'gp_referral_program_actions')
+        return $this->belongsToMany(GPReferralProgram::class, 'gp_referral_program_actions', 'gp_id', 'gp_referral_program_id')
             ->where('action_type', 'participated')
             ->withTimestamps();
     }
@@ -60,7 +60,7 @@ class GP extends Model
      */
     public function attendedPrograms()
     {
-        return $this->belongsToMany(GPReferralProgram::class, 'gp_referral_program_actions')
+        return $this->belongsToMany(GPReferralProgram::class, 'gp_referral_program_actions', 'gp_id', 'gp_referral_program_id')
             ->where('action_type', 'attended')
             ->withTimestamps();
     }

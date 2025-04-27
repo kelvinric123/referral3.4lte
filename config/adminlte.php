@@ -442,10 +442,16 @@ return [
             'can' => 'super-admin',
             'submenu' => [
                 [
-                    'text' => 'List',
+                    'text' => 'Program List',
                     'url' => 'admin/gp-referral-programs',
                     'icon' => 'fas fa-fw fa-list',
                     'active' => ['admin/gp-referral-programs*'],
+                ],
+                [
+                    'text' => 'Program Participation',
+                    'url' => 'admin/gp-referral-program-participation',
+                    'icon' => 'fas fa-fw fa-users',
+                    'active' => ['admin/gp-referral-program-participation*'],
                 ],
             ],
         ],
