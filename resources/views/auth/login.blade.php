@@ -128,6 +128,13 @@
                         @enderror
                     </div>
 
+                    <!-- Consultant Default Password Info -->
+                    <div class="consultant-password-info mt-2 mb-3 d-none">
+                        <div class="alert alert-info py-2">
+                            <small><i class="fas fa-info-circle mr-1"></i> Default consultant password is <strong>qmed.asia</strong></small>
+                        </div>
+                    </div>
+
                     <!-- Login field -->
                     <div class="row">
                         <div class="col-8">
@@ -160,6 +167,23 @@
 @stop
 
 @section('adminlte_js')
+    <script>
+        $(document).ready(function() {
+            // Show/hide consultant password info based on role selection
+            $('select[name="role"]').change(function() {
+                if ($(this).val() === 'consultant') {
+                    $('.consultant-password-info').removeClass('d-none');
+                } else {
+                    $('.consultant-password-info').addClass('d-none');
+                }
+            });
+            
+            // Check initial value on page load
+            if ($('select[name="role"]').val() === 'consultant') {
+                $('.consultant-password-info').removeClass('d-none');
+            }
+        });
+    </script>
     @stack('js')
     @yield('js')
 @stop

@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('experience');
             $table->text('bio')->nullable();
             $table->string('email')->nullable();
+            $table->string('password')->nullable();
             $table->string('phone')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();

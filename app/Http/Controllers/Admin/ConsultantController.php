@@ -7,6 +7,7 @@ use App\Models\Consultant;
 use App\Models\Hospital;
 use App\Models\Specialty;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class ConsultantController extends Controller
 {
@@ -49,9 +50,17 @@ class ConsultantController extends Controller
             'experience' => 'required|string',
             'bio' => 'nullable|string',
             'email' => 'nullable|email|max:255',
+            'password' => 'nullable|string|min:6',
             'phone' => 'nullable|string|max:20',
             'is_active' => 'sometimes|boolean',
         ]);
+
+        // If password is not provided, set the default password
+        if (empty($validated['password'])) {
+            $validated['password'] = Hash::make('qmed.asia');
+        } else {
+            $validated['password'] = Hash::make($validated['password']);
+        }
 
         Consultant::create($validated);
 
@@ -97,9 +106,17 @@ class ConsultantController extends Controller
             'experience' => 'required|string',
             'bio' => 'nullable|string',
             'email' => 'nullable|email|max:255',
+            'password' => 'nullable|string|min:6',
             'phone' => 'nullable|string|max:20',
             'is_active' => 'sometimes|boolean',
         ]);
+
+        // If password is provided, hash it, otherwise remove it from the validated data to keep the current password
+        if (!empty($validated['password'])) {
+            $validated['password'] = Hash::make($validated['password']);
+        } else {
+            unset($validated['password']);
+        }
 
         $consultant->update($validated);
 

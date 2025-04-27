@@ -19,8 +19,13 @@ class Consultant extends Model
         'experience',
         'bio',
         'email',
+        'password',
         'phone',
         'is_active',
+    ];
+
+    protected $hidden = [
+        'password',
     ];
 
     protected $casts = [

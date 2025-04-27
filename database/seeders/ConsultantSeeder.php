@@ -6,6 +6,7 @@ use App\Models\Consultant;
 use App\Models\Specialty;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 use Faker\Factory as Faker;
 
 class ConsultantSeeder extends Seeder
@@ -68,6 +69,7 @@ class ConsultantSeeder extends Seeder
                     'experience' => $faker->numberBetween(5, 30) . ' years',
                     'bio' => $faker->paragraph(3),
                     'email' => $faker->email,
+                    'password' => Hash::make('qmed.asia'),
                     'phone' => $faker->phoneNumber,
                     'is_active' => true,
                 ]);

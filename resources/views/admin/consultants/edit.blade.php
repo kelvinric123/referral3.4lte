@@ -165,6 +165,19 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" name="password" id="password" class="form-control @error('password') is-invalid @enderror">
+                    <small class="form-text text-muted">
+                        Leave blank to keep current password. Default password is "qmed.asia".
+                    </small>
+                    @error('password')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+
+                <div class="form-group">
                     <div class="custom-control custom-switch">
                         <input type="checkbox" class="custom-control-input" id="is_active" name="is_active" value="1" 
                                {{ old('is_active', $consultant->is_active) ? 'checked' : '' }}>
