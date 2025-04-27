@@ -116,6 +116,9 @@ Route::prefix('hospital')->name('hospital.')->middleware(['auth', 'role:hospital
     // GP Management
     Route::resource('gps', App\Http\Controllers\Hospital\GPController::class)->names('gps');
     
+    // Document Management Routes
+    Route::get('/documents/{document}/download', [App\Http\Controllers\Hospital\DocumentController::class, 'download'])->name('documents.download');
+    
     // Referral Management
     Route::resource('referrals', App\Http\Controllers\Hospital\ReferralController::class)->names('referrals');
 });
