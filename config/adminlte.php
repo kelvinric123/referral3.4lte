@@ -309,6 +309,20 @@ return [
             'type' => 'fullscreen-widget',
             'topnav_right' => true,
         ],
+        [
+            'text' => 'Dashboard',
+            'url' => 'admin/dashboard',
+            'icon' => 'fas fa-fw fa-tachometer-alt',
+            'topnav_left' => true,
+            'can' => 'super-admin',
+        ],
+        [
+            'text' => 'Statistics',
+            'url' => 'admin/statistics',
+            'icon' => 'fas fa-fw fa-chart-bar',
+            'topnav_left' => true,
+            'can' => 'super-admin',
+        ],
 
         // Sidebar items:
         [

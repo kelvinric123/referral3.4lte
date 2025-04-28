@@ -97,6 +97,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:super-admin'])
         ->name('gp-referral-program-participation.record-participation');
     Route::post('gp-referral-program-participation/{program}/record-attendance', [App\Http\Controllers\Admin\GPReferralProgramParticipationController::class, 'recordAttendance'])
         ->name('gp-referral-program-participation.record-attendance');
+
+    // Add the statistics route to the admin routes
+    Route::get('statistics', 'App\Http\Controllers\Admin\StatisticsController@index');
 });
 
 // Hospital Admin Routes
