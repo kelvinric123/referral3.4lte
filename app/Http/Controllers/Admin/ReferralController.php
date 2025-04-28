@@ -21,7 +21,7 @@ class ReferralController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Referral::with(['hospital', 'specialty', 'consultant']);
+        $query = Referral::with(['hospital', 'specialty', 'consultant', 'gp', 'bookingAgent']);
         
         // Apply filters
         if ($request->filled('status')) {
@@ -42,6 +42,15 @@ class ReferralController extends Controller
         
         if ($request->filled('referrer_type')) {
             $query->where('referrer_type', $request->input('referrer_type'));
+            
+            // Filter by specific GP or Booking Agent if provided
+            if ($request->filled('gp_id') && $request->input('referrer_type') == 'GP') {
+                $query->where('gp_id', $request->input('gp_id'));
+            }
+            
+            if ($request->filled('booking_agent_id') && $request->input('referrer_type') == 'BookingAgent') {
+                $query->where('booking_agent_id', $request->input('booking_agent_id'));
+            }
         }
         
         if ($request->filled('search')) {
@@ -68,8 +77,10 @@ class ReferralController extends Controller
         $hospitals = Hospital::where('is_active', true)->get();
         $specialties = Specialty::where('is_active', true)->get();
         $consultants = Consultant::where('is_active', true)->get();
+        $gps = GP::where('is_active', true)->get();
+        $bookingAgents = BookingAgent::where('is_active', true)->get();
         
-        return view('admin.referrals.index', compact('referrals', 'hospitals', 'specialties', 'consultants'));
+        return view('admin.referrals.index', compact('referrals', 'hospitals', 'specialties', 'consultants', 'gps', 'bookingAgents'));
     }
 
     /**

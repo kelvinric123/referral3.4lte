@@ -104,6 +104,32 @@
                     </div>
                 </div>
                 <div class="row">
+                    <div class="col-md-3" id="gp_filter" style="{{ request('referrer_type') == 'GP' ? '' : 'display: none;' }}">
+                        <div class="form-group">
+                            <label for="gp_id">GP Doctor</label>
+                            <select class="form-control" id="gp_id" name="gp_id">
+                                <option value="">All GPs</option>
+                                @foreach($gps as $gp)
+                                    <option value="{{ $gp->id }}" {{ request('gp_id') == $gp->id ? 'selected' : '' }}>
+                                        {{ $gp->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3" id="booking_agent_filter" style="{{ request('referrer_type') == 'BookingAgent' ? '' : 'display: none;' }}">
+                        <div class="form-group">
+                            <label for="booking_agent_id">Booking Agent</label>
+                            <select class="form-control" id="booking_agent_id" name="booking_agent_id">
+                                <option value="">All Booking Agents</option>
+                                @foreach($bookingAgents as $agent)
+                                    <option value="{{ $agent->id }}" {{ request('booking_agent_id') == $agent->id ? 'selected' : '' }}>
+                                        {{ $agent->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
                     <div class="col-md-3">
                         <div class="form-group">
                             <label for="search">Search</label>
@@ -397,6 +423,26 @@
                     width: '100%'
                 });
             }, 100);
+            
+            // Toggle GP and Booking Agent filters based on referrer type
+            $('#referrer_type').on('change', function() {
+                var selectedType = $(this).val();
+                
+                if (selectedType === 'GP') {
+                    $('#gp_filter').show();
+                    $('#booking_agent_filter').hide();
+                    $('#booking_agent_id').val('').trigger('change.select2');
+                } else if (selectedType === 'BookingAgent') {
+                    $('#booking_agent_filter').show();
+                    $('#gp_filter').hide();
+                    $('#gp_id').val('').trigger('change.select2');
+                } else {
+                    $('#gp_filter').hide();
+                    $('#booking_agent_filter').hide();
+                    $('#gp_id').val('').trigger('change.select2');
+                    $('#booking_agent_id').val('').trigger('change.select2');
+                }
+            });
             
             // Initialize DataTable
             var table = $('.table').DataTable({
