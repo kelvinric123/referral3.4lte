@@ -12,10 +12,16 @@ class BookingAgent extends Model
     protected $fillable = [
         'name',
         'company_id',
+        'username',
+        'password',
         'email',
         'phone',
         'position',
         'is_active',
+    ];
+
+    protected $hidden = [
+        'password',
     ];
 
     protected $casts = [
@@ -44,5 +50,13 @@ class BookingAgent extends Model
     public function loyaltyPoints()
     {
         return $this->morphMany(LoyaltyPoint::class, 'pointable');
+    }
+
+    /**
+     * Set the password attribute with bcrypt hashing.
+     */
+    public function setPasswordAttribute($value)
+    {
+        $this->attributes['password'] = bcrypt($value);
     }
 } 

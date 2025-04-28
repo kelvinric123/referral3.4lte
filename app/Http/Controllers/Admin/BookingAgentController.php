@@ -35,6 +35,8 @@ class BookingAgentController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'company_id' => 'required|exists:companies,id',
+            'username' => 'required|string|max:255|unique:booking_agents',
+            'password' => 'required|string|min:6',
             'email' => 'nullable|email|max:255',
             'phone' => 'nullable|string|max:20',
             'position' => 'nullable|string|max:255',
@@ -73,11 +75,18 @@ class BookingAgentController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'company_id' => 'required|exists:companies,id',
+            'username' => 'required|string|max:255|unique:booking_agents,username,' . $bookingAgent->id,
+            'password' => 'nullable|string|min:6',
             'email' => 'nullable|email|max:255',
             'phone' => 'nullable|string|max:20',
             'position' => 'nullable|string|max:255',
             'is_active' => 'boolean',
         ]);
+
+        // Only update password if a new one is provided
+        if (empty($validated['password'])) {
+            unset($validated['password']);
+        }
 
         $bookingAgent->update($validated);
 

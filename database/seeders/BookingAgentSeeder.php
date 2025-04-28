@@ -27,6 +27,8 @@ class BookingAgentSeeder extends Seeder
             [
                 'name' => 'John Doe',
                 'company_id' => 1,
+                'username' => 'johndoe',
+                'password' => 'qmed.asia',
                 'email' => 'john.doe@globalmedtravel.com',
                 'phone' => '+60123456001',
                 'position' => 'Senior Agent',
@@ -35,6 +37,8 @@ class BookingAgentSeeder extends Seeder
             [
                 'name' => 'Jane Smith',
                 'company_id' => 1,
+                'username' => 'janesmith',
+                'password' => 'qmed.asia',
                 'email' => 'jane.smith@globalmedtravel.com',
                 'phone' => '+60123456002',
                 'position' => 'Medical Coordinator',
@@ -43,6 +47,8 @@ class BookingAgentSeeder extends Seeder
             [
                 'name' => 'Robert Chen',
                 'company_id' => 2,
+                'username' => 'robertchen',
+                'password' => 'qmed.asia',
                 'email' => 'robert.chen@asianhealthconnect.com',
                 'phone' => '+60198765001',
                 'position' => 'Travel Specialist',
@@ -51,6 +57,8 @@ class BookingAgentSeeder extends Seeder
             [
                 'name' => 'Lisa Wong',
                 'company_id' => 2,
+                'username' => 'lisawong',
+                'password' => 'qmed.asia',
                 'email' => 'lisa.wong@asianhealthconnect.com',
                 'phone' => '+60198765002',
                 'position' => 'Client Relations',
@@ -59,6 +67,8 @@ class BookingAgentSeeder extends Seeder
             [
                 'name' => 'Ahmed Khan',
                 'company_id' => 3,
+                'username' => 'ahmedkhan',
+                'password' => 'qmed.asia',
                 'email' => 'ahmed.khan@meditour.com',
                 'phone' => '+60145678001',
                 'position' => 'Travel Consultant',

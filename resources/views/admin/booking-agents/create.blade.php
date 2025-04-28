@@ -38,6 +38,35 @@
                 </div>
                 
                 <div class="form-group">
+                    <label for="username">Username *</label>
+                    <input type="text" class="form-control @error('username') is-invalid @enderror" id="username" name="username" value="{{ old('username') }}" required>
+                    @error('username')
+                        <span class="invalid-feedback">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}">
+                            @error('email')
+                                <span class="invalid-feedback">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="password">Password *</label>
+                            <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" value="qmed.asia" required>
+                            @error('password')
+                                <span class="invalid-feedback">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
                     <label for="company_id">Company *</label>
                     <select class="form-control @error('company_id') is-invalid @enderror" id="company_id" name="company_id" required>
                         <option value="">Select Company</option>
@@ -53,15 +82,6 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="email">Email</label>
-                            <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}">
-                            @error('email')
-                                <span class="invalid-feedback">{{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
                             <label for="phone">Phone</label>
                             <input type="text" class="form-control @error('phone') is-invalid @enderror" id="phone" name="phone" value="{{ old('phone') }}">
                             @error('phone')
@@ -69,14 +89,15 @@
                             @enderror
                         </div>
                     </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="position">Position</label>
-                    <input type="text" class="form-control @error('position') is-invalid @enderror" id="position" name="position" value="{{ old('position') }}">
-                    @error('position')
-                        <span class="invalid-feedback">{{ $message }}</span>
-                    @enderror
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="position">Position</label>
+                            <input type="text" class="form-control @error('position') is-invalid @enderror" id="position" name="position" value="{{ old('position') }}">
+                            @error('position')
+                                <span class="invalid-feedback">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
                 </div>
                 
                 <div class="form-group">

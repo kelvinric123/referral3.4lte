@@ -38,6 +38,10 @@ Route::post('/hospital/login', [App\Http\Controllers\Auth\HospitalLoginControlle
 Route::get('/consultant/login', [App\Http\Controllers\Auth\ConsultantLoginController::class, 'showLoginForm'])->name('consultant.login.form');
 Route::post('/consultant/login', [App\Http\Controllers\Auth\ConsultantLoginController::class, 'login'])->name('consultant.login');
 
+// Booking Agent Authentication Routes
+Route::get('/booking-agent/login', [App\Http\Controllers\Auth\BookingAgentLoginController::class, 'showLoginForm'])->name('booking-agent.login.form');
+Route::post('/booking-agent/login', [App\Http\Controllers\Auth\BookingAgentLoginController::class, 'login'])->name('booking-agent.login');
+
 // Default home route
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
@@ -180,8 +184,8 @@ Route::prefix('doctor')->name('doctor.')->middleware(['auth', 'role:gp-doctor'])
 });
 
 // Booking Agent Routes
-Route::prefix('booking')->group(function () {
-    Route::get('/dashboard', [BookingDashboardController::class, 'index'])->name('booking.dashboard');
+Route::prefix('booking')->name('booking.')->middleware(['auth', 'role:booking-agent'])->group(function () {
+    Route::get('/dashboard', [BookingDashboardController::class, 'index'])->name('dashboard');
 });
 
 Auth::routes();
