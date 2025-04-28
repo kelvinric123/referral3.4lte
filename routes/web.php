@@ -56,6 +56,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:super-admin'])
     // Referral Management Routes
     Route::resource('referrals', App\Http\Controllers\Admin\ReferralController::class)->names('referrals');
     
+    // Referral Status Update Route
+    Route::patch('/referrals/{referral}/update-status', [App\Http\Controllers\Admin\ReferralController::class, 'updateStatus'])->name('referrals.update-status');
+    
     // Document Management Routes
     Route::get('/documents/{document}/download', [App\Http\Controllers\Admin\DocumentController::class, 'download'])->name('documents.download');
     Route::delete('/documents/{document}', [App\Http\Controllers\Admin\DocumentController::class, 'destroy'])->name('documents.destroy');

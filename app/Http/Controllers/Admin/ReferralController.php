@@ -19,9 +19,48 @@ class ReferralController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $referrals = Referral::with(['hospital', 'specialty', 'consultant'])->paginate(10);
+        $query = Referral::with(['hospital', 'specialty', 'consultant']);
+        
+        // Apply filters
+        if ($request->filled('status')) {
+            $query->where('status', $request->input('status'));
+        }
+        
+        if ($request->filled('hospital_id')) {
+            $query->where('hospital_id', $request->input('hospital_id'));
+        }
+        
+        if ($request->filled('specialty_id')) {
+            $query->where('specialty_id', $request->input('specialty_id'));
+        }
+        
+        if ($request->filled('referrer_type')) {
+            $query->where('referrer_type', $request->input('referrer_type'));
+        }
+        
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function($q) use ($search) {
+                $q->where('patient_name', 'like', "%{$search}%")
+                  ->orWhere('patient_id', 'like', "%{$search}%");
+            });
+        }
+        
+        if ($request->filled('date_from')) {
+            $query->whereDate('created_at', '>=', $request->input('date_from'));
+        }
+        
+        if ($request->filled('date_to')) {
+            $query->whereDate('created_at', '<=', $request->input('date_to'));
+        }
+        
+        if ($request->filled('priority')) {
+            $query->where('priority', $request->input('priority'));
+        }
+        
+        $referrals = $query->latest()->paginate(10);
         $hospitals = Hospital::where('is_active', true)->get();
         $specialties = Specialty::where('is_active', true)->get();
         
@@ -197,6 +236,47 @@ class ReferralController extends Controller
 
         return redirect()->route('admin.referrals.index')
             ->with('success', 'Referral deleted successfully.');
+    }
+    
+    /**
+     * Update the status of a referral.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Referral  $referral
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function updateStatus(Request $request, Referral $referral)
+    {
+        $validated = $request->validate([
+            'status' => 'required|in:Pending,Approved,Rejected,No Show,Completed',
+        ]);
+
+        $oldStatus = $referral->status;
+        $newStatus = $validated['status'];
+        
+        // Get the current loyalty points count for this referral
+        $initialPointsCount = $referral->loyaltyPoints()->count();
+        
+        $referral->update(['status' => $newStatus]);
+        
+        $message = 'Referral status updated to ' . $newStatus . ' successfully.';
+        
+        // Check if the status has changed and update loyalty points
+        if ($oldStatus !== $newStatus) {
+            $referral->updateLoyaltyPoints();
+            
+            // Check if new loyalty points were awarded
+            $newPointsCount = $referral->loyaltyPoints()->count();
+            
+            if ($newPointsCount > $initialPointsCount) {
+                $latestPoints = $referral->loyaltyPoints()->latest()->first();
+                if ($latestPoints) {
+                    $message .= ' ' . $latestPoints->points . ' loyalty points were awarded to the referrer.';
+                }
+            }
+        }
+
+        return redirect()->back()->with('success', $message);
     }
     
     /**

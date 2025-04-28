@@ -32,6 +32,8 @@
                                 <option value="Pending" {{ request('status') == 'Pending' ? 'selected' : '' }}>Pending</option>
                                 <option value="Approved" {{ request('status') == 'Approved' ? 'selected' : '' }}>Approved</option>
                                 <option value="Rejected" {{ request('status') == 'Rejected' ? 'selected' : '' }}>Rejected</option>
+                                <option value="No Show" {{ request('status') == 'No Show' ? 'selected' : '' }}>No Show</option>
+                                <option value="Completed" {{ request('status') == 'Completed' ? 'selected' : '' }}>Completed</option>
                             </select>
                         </div>
                     </div>
@@ -185,7 +187,43 @@
                                         <span class="badge bg-success">Approved</span>
                                     @elseif($referral->status == 'Rejected')
                                         <span class="badge bg-danger">Rejected</span>
+                                    @elseif($referral->status == 'No Show')
+                                        <span class="badge bg-warning">No Show</span>
+                                    @elseif($referral->status == 'Completed')
+                                        <span class="badge bg-primary">Completed</span>
                                     @endif
+                                    
+                                    <div class="dropdown d-inline ml-1">
+                                        <button class="btn btn-xs btn-secondary dropdown-toggle" type="button" id="statusDropdown{{ $referral->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            Change
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="statusDropdown{{ $referral->id }}">
+                                            <form action="{{ route('admin.referrals.update-status', $referral->id) }}" method="POST" class="status-form">
+                                                @csrf
+                                                @method('PATCH')
+                                                
+                                                <button type="submit" name="status" value="Pending" class="dropdown-item {{ $referral->status == 'Pending' ? 'active' : '' }}">
+                                                    <i class="fas fa-circle text-secondary mr-1"></i> Pending
+                                                </button>
+                                                
+                                                <button type="submit" name="status" value="Approved" class="dropdown-item {{ $referral->status == 'Approved' ? 'active' : '' }}">
+                                                    <i class="fas fa-circle text-success mr-1"></i> Approved
+                                                </button>
+                                                
+                                                <button type="submit" name="status" value="Rejected" class="dropdown-item {{ $referral->status == 'Rejected' ? 'active' : '' }}">
+                                                    <i class="fas fa-circle text-danger mr-1"></i> Rejected
+                                                </button>
+                                                
+                                                <button type="submit" name="status" value="No Show" class="dropdown-item {{ $referral->status == 'No Show' ? 'active' : '' }}">
+                                                    <i class="fas fa-circle text-warning mr-1"></i> No Show
+                                                </button>
+                                                
+                                                <button type="submit" name="status" value="Completed" class="dropdown-item {{ $referral->status == 'Completed' ? 'active' : '' }}">
+                                                    <i class="fas fa-circle text-primary mr-1"></i> Completed
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
                                 </td>
                                 <td>{{ $referral->created_at->format('d M Y') }}</td>
                                 <td>
@@ -232,6 +270,27 @@
             $('.form-control[id$="_id"]').select2({
                 theme: 'bootstrap4',
                 width: '100%'
+            });
+            
+            // Confirmation dialog for status change
+            $('.status-form button[type="submit"]').on('click', function(e) {
+                e.preventDefault();
+                
+                var $button = $(this);
+                var statusValue = $button.val();
+                var referralId = $button.closest('form').attr('action').split('/').pop();
+                var confirmMessage = 'Are you sure you want to change the status to ' + statusValue + '?';
+                
+                // Add extra information about loyalty points for certain statuses
+                if (statusValue === 'Completed') {
+                    confirmMessage += '\n\nThis will award loyalty points to the referrer if applicable.';
+                } else if (statusValue === 'No Show') {
+                    confirmMessage += '\n\nThis may affect loyalty points for the referrer.';
+                }
+                
+                if (confirm(confirmMessage)) {
+                    $button.closest('form').submit();
+                }
             });
         });
     </script>

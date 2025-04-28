@@ -316,9 +316,9 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label for="medical_condition">Medical Condition <span class="text-danger">*</span></label>
-                            <textarea class="form-control @error('medical_condition') is-invalid @enderror" id="medical_condition" name="medical_condition" rows="3" required>{{ old('medical_condition', $referral->medical_condition) }}</textarea>
-                            @error('medical_condition')
+                            <label for="diagnosis">Diagnosis/Condition <span class="text-danger">*</span></label>
+                            <textarea class="form-control @error('diagnosis') is-invalid @enderror" id="diagnosis" name="diagnosis" rows="3" required>{{ old('diagnosis', $referral->diagnosis) }}</textarea>
+                            @error('diagnosis')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
@@ -328,9 +328,21 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label for="notes">Additional Notes</label>
-                            <textarea class="form-control @error('notes') is-invalid @enderror" id="notes" name="notes" rows="3">{{ old('notes', $referral->notes) }}</textarea>
-                            @error('notes')
+                            <label for="clinical_history">Clinical History</label>
+                            <textarea class="form-control @error('clinical_history') is-invalid @enderror" id="clinical_history" name="clinical_history" rows="3">{{ old('clinical_history', $referral->clinical_history) }}</textarea>
+                            @error('clinical_history')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="remarks">Additional Notes</label>
+                            <textarea class="form-control @error('remarks') is-invalid @enderror" id="remarks" name="remarks" rows="3">{{ old('remarks', $referral->remarks) }}</textarea>
+                            @error('remarks')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
