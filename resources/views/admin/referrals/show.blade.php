@@ -134,14 +134,41 @@
                     <div class="text-center mb-3">
                         @php
                             $statusClass = [
-                                'Pending' => 'warning',
+                                'Pending' => 'secondary',
                                 'Approved' => 'success',
-                                'Rejected' => 'danger'
+                                'Rejected' => 'danger',
+                                'No Show' => 'warning',
+                                'Completed' => 'primary'
                             ][$referral->status] ?? 'secondary';
                         @endphp
                         <span class="badge badge-{{ $statusClass }} p-3" style="font-size: 1.2rem;">
                             {{ $referral->status }}
                         </span>
+                    </div>
+                    
+                    <div class="status-flow mb-3">
+                        <h6 class="text-muted">Status Flow:</h6>
+                        <ul class="list-unstyled">
+                            <li class="{{ $referral->status == 'Pending' ? 'font-weight-bold text-secondary' : '' }}">
+                                <i class="fas fa-circle {{ $referral->status == 'Pending' ? 'text-secondary' : 'text-muted' }} mr-2"></i>Pending
+                            </li>
+                            <li class="ml-3 {{ $referral->status == 'Approved' ? 'font-weight-bold text-success' : '' }}">
+                                <i class="fas fa-arrow-right text-muted mr-2"></i>
+                                <i class="fas fa-circle {{ $referral->status == 'Approved' ? 'text-success' : 'text-muted' }} mr-2"></i>Approved
+                            </li>
+                            <li class="ml-5 {{ $referral->status == 'Completed' ? 'font-weight-bold text-primary' : '' }}">
+                                <i class="fas fa-arrow-right text-muted mr-2"></i>
+                                <i class="fas fa-circle {{ $referral->status == 'Completed' ? 'text-primary' : 'text-muted' }} mr-2"></i>Completed
+                            </li>
+                            <li class="ml-5 {{ $referral->status == 'No Show' ? 'font-weight-bold text-warning' : '' }}">
+                                <i class="fas fa-arrow-right text-muted mr-2"></i>
+                                <i class="fas fa-circle {{ $referral->status == 'No Show' ? 'text-warning' : 'text-muted' }} mr-2"></i>No Show
+                            </li>
+                            <li class="ml-3 {{ $referral->status == 'Rejected' ? 'font-weight-bold text-danger' : '' }}">
+                                <i class="fas fa-arrow-right text-muted mr-2"></i>
+                                <i class="fas fa-circle {{ $referral->status == 'Rejected' ? 'text-danger' : 'text-muted' }} mr-2"></i>Rejected
+                            </li>
+                        </ul>
                     </div>
                     
                     <dl>

@@ -36,6 +36,10 @@ class ReferralController extends Controller
             $query->where('specialty_id', $request->input('specialty_id'));
         }
         
+        if ($request->filled('consultant_id')) {
+            $query->where('consultant_id', $request->input('consultant_id'));
+        }
+        
         if ($request->filled('referrer_type')) {
             $query->where('referrer_type', $request->input('referrer_type'));
         }
@@ -63,8 +67,9 @@ class ReferralController extends Controller
         $referrals = $query->latest()->paginate(10);
         $hospitals = Hospital::where('is_active', true)->get();
         $specialties = Specialty::where('is_active', true)->get();
+        $consultants = Consultant::where('is_active', true)->get();
         
-        return view('admin.referrals.index', compact('referrals', 'hospitals', 'specialties'));
+        return view('admin.referrals.index', compact('referrals', 'hospitals', 'specialties', 'consultants'));
     }
 
     /**
@@ -111,12 +116,15 @@ class ReferralController extends Controller
             'diagnosis' => 'required|string',
             'clinical_history' => 'nullable|string',
             'remarks' => 'nullable|string',
-            'status' => 'required|in:Pending,Approved,Rejected,No Show,Completed',
+            'status' => 'required|in:Pending',
             'documents.*' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:10240',
         ]);
 
         // Ensure patient name is stored in uppercase
         $validated['patient_name'] = strtoupper($validated['patient_name']);
+        
+        // Ensure the status starts as Pending for new referrals
+        $validated['status'] = 'Pending';
 
         $referral = Referral::create($validated);
         
@@ -253,6 +261,32 @@ class ReferralController extends Controller
 
         $oldStatus = $referral->status;
         $newStatus = $validated['status'];
+        
+        // Validate status flow
+        $isValidTransition = false;
+        
+        switch ($oldStatus) {
+            case 'Pending':
+                $isValidTransition = in_array($newStatus, ['Approved', 'Rejected']);
+                break;
+            case 'Approved':
+                $isValidTransition = in_array($newStatus, ['Completed', 'No Show']);
+                break;
+            case 'Rejected':
+            case 'Completed':
+            case 'No Show':
+                // These are final states, no further transitions allowed
+                $isValidTransition = false;
+                break;
+            default:
+                // For any other status, allow transition to Pending, Approved, or Rejected
+                $isValidTransition = in_array($newStatus, ['Pending', 'Approved', 'Rejected']);
+                break;
+        }
+        
+        if (!$isValidTransition) {
+            return redirect()->back()->with('error', "Invalid status transition from {$oldStatus} to {$newStatus}. Please follow the proper status flow.");
+        }
         
         // Get the current loyalty points count for this referral
         $initialPointsCount = $referral->loyaltyPoints()->count();

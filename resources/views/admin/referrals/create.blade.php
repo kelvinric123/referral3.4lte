@@ -245,11 +245,11 @@
 
                                 <div class="form-group">
                                     <label for="status">Status</label>
-                                    <select class="form-control @error('status') is-invalid @enderror" id="status" name="status" required>
-                                        <option value="Pending" {{ old('status', 'Pending') == 'Pending' ? 'selected' : '' }}>Pending</option>
-                                        <option value="Approved" {{ old('status') == 'Approved' ? 'selected' : '' }}>Approved</option>
-                                        <option value="Rejected" {{ old('status') == 'Rejected' ? 'selected' : '' }}>Rejected</option>
+                                    <select class="form-control @error('status') is-invalid @enderror" id="status" name="status" required disabled>
+                                        <option value="Pending" selected>Pending</option>
                                     </select>
+                                    <input type="hidden" name="status" value="Pending">
+                                    <small class="form-text text-muted">New referrals always start as Pending</small>
                                     @error('status')
                                         <span class="invalid-feedback">{{ $message }}</span>
                                     @enderror

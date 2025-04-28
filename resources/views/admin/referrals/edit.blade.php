@@ -294,11 +294,27 @@
                         <div class="form-group">
                             <label for="status">Status <span class="text-danger">*</span></label>
                             <select class="form-control @error('status') is-invalid @enderror" id="status" name="status" required>
-                                <option value="">Select Status</option>
-                                <option value="Pending" {{ old('status', $referral->status) == 'Pending' ? 'selected' : '' }}>Pending</option>
-                                <option value="Approved" {{ old('status', $referral->status) == 'Approved' ? 'selected' : '' }}>Approved</option>
-                                <option value="Rejected" {{ old('status', $referral->status) == 'Rejected' ? 'selected' : '' }}>Rejected</option>
+                                @if($referral->status == 'Pending')
+                                    <option value="Pending" selected>Pending</option>
+                                    <option value="Approved">Approved</option>
+                                    <option value="Rejected">Rejected</option>
+                                @elseif($referral->status == 'Approved')
+                                    <option value="Approved" selected>Approved</option>
+                                    <option value="Completed">Completed</option>
+                                    <option value="No Show">No Show</option>
+                                @elseif(in_array($referral->status, ['Rejected', 'Completed', 'No Show']))
+                                    <option value="{{ $referral->status }}" selected>{{ $referral->status }}</option>
+                                @endif
                             </select>
+                            <small class="form-text text-muted">
+                                @if($referral->status == 'Pending')
+                                    Pending referrals can be Approved or Rejected
+                                @elseif($referral->status == 'Approved')
+                                    Approved referrals can be marked as Completed or No Show
+                                @elseif(in_array($referral->status, ['Rejected', 'Completed', 'No Show']))
+                                    {{ $referral->status }} is a final status and cannot be changed
+                                @endif
+                            </small>
                             @error('status')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
