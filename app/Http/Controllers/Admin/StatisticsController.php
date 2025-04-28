@@ -9,7 +9,9 @@ use App\Models\Referral;
 use App\Models\User;
 use App\Models\Consultant;
 use App\Models\Specialty;
+use App\Models\Clinic;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class StatisticsController extends Controller
 {
@@ -38,13 +40,27 @@ class StatisticsController extends Controller
             'referrals' => Referral::count(),
             'consultants' => Consultant::count() ?? 0,
             'specialties' => Specialty::count() ?? 0,
+            'clinics' => Clinic::count() ?? 0,
         ];
 
         // Get monthly referral statistics
         $monthlyReferrals = $this->getMonthlyReferrals();
+        
+        // Get performance statistics
+        $gpPerformance = $this->getGPPerformance();
+        $consultantPerformance = $this->getConsultantPerformance();
+        $specialtyPerformance = $this->getSpecialtyPerformance();
+        $clinicPerformance = $this->getClinicPerformance();
 
         // Return the view with data
-        return view('admin.statistics', compact('stats', 'monthlyReferrals'));
+        return view('admin.statistics', compact(
+            'stats', 
+            'monthlyReferrals',
+            'gpPerformance',
+            'consultantPerformance',
+            'specialtyPerformance',
+            'clinicPerformance'
+        ));
     }
 
     /**
@@ -93,5 +109,90 @@ class StatisticsController extends Controller
         }
 
         return $result;
+    }
+    
+    /**
+     * Get GP Doctors performance statistics.
+     *
+     * @return array
+     */
+    private function getGPPerformance()
+    {
+        try {
+            $gps = GP::select('gps.id', 'gps.name', DB::raw('COUNT(referrals.id) as referral_count'))
+                ->leftJoin('referrals', 'gps.id', '=', 'referrals.gp_id')
+                ->groupBy('gps.id', 'gps.name')
+                ->orderBy('referral_count', 'desc')
+                ->limit(20)
+                ->get();
+                
+            return $gps;
+        } catch (\Exception $e) {
+            return [];
+        }
+    }
+    
+    /**
+     * Get Consultants performance statistics.
+     *
+     * @return array
+     */
+    private function getConsultantPerformance()
+    {
+        try {
+            $consultants = Consultant::select('consultants.id', 'consultants.name', DB::raw('COUNT(referrals.id) as referral_count'))
+                ->leftJoin('referrals', 'consultants.id', '=', 'referrals.consultant_id')
+                ->groupBy('consultants.id', 'consultants.name')
+                ->orderBy('referral_count', 'desc')
+                ->limit(20)
+                ->get();
+                
+            return $consultants;
+        } catch (\Exception $e) {
+            return [];
+        }
+    }
+    
+    /**
+     * Get Specialties performance statistics.
+     *
+     * @return array
+     */
+    private function getSpecialtyPerformance()
+    {
+        try {
+            $specialties = Specialty::select('specialties.id', 'specialties.name', DB::raw('COUNT(referrals.id) as referral_count'))
+                ->leftJoin('referrals', 'specialties.id', '=', 'referrals.specialty_id')
+                ->groupBy('specialties.id', 'specialties.name')
+                ->orderBy('referral_count', 'desc')
+                ->limit(20)
+                ->get();
+                
+            return $specialties;
+        } catch (\Exception $e) {
+            return [];
+        }
+    }
+    
+    /**
+     * Get Clinics performance statistics.
+     *
+     * @return array
+     */
+    private function getClinicPerformance()
+    {
+        try {
+            $clinics = Clinic::select('clinics.id', 'clinics.name', DB::raw('COUNT(referrals.id) as referral_count'))
+                ->leftJoin('gps', 'clinics.id', '=', 'gps.clinic_id')
+                ->leftJoin('referrals', 'gps.id', '=', 'referrals.gp_id')
+                ->groupBy('clinics.id', 'clinics.name')
+                ->orderBy('referral_count', 'desc')
+                ->limit(20)
+                ->get();
+                
+            return $clinics;
+        } catch (\Exception $e) {
+            return [];
+        }
     }
 } 

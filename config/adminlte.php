@@ -309,21 +309,7 @@ return [
             'type' => 'fullscreen-widget',
             'topnav_right' => true,
         ],
-        [
-            'text' => 'Dashboard',
-            'url' => 'admin/dashboard',
-            'icon' => 'fas fa-fw fa-tachometer-alt',
-            'topnav_left' => true,
-            'can' => 'super-admin',
-        ],
-        [
-            'text' => 'Statistics',
-            'url' => 'admin/statistics',
-            'icon' => 'fas fa-fw fa-chart-bar',
-            'topnav_left' => true,
-            'can' => 'super-admin',
-        ],
-
+        
         // Sidebar items:
         [
             'type' => 'sidebar-menu-search',
@@ -336,61 +322,81 @@ return [
         ],
         [
             'header' => 'SYSTEM ADMINISTRATION',
-            'classes' => 'text-bold text-uppercase bg-orange',
+            'classes' => 'text-bold text-uppercase bg-teal',
+            'can' => 'super-admin',
+        ],
+        [
+            'text' => 'Dashboard',
+            'url' => 'admin/dashboard',
+            'icon' => 'fas fa-fw fa-tachometer-alt',
+            'classes' => 'bg-light text-dark',
+            'can' => 'super-admin',
+        ],
+        [
+            'text' => 'Statistics',
+            'url' => 'admin/statistics',
+            'icon' => 'fas fa-fw fa-chart-bar',
+            'classes' => 'bg-light text-dark',
             'can' => 'super-admin',
         ],
         [
             'text' => 'Admin Management',
             'icon' => 'fas fa-fw fa-cogs',
-            'classes' => 'text-bold bg-light text-dark',
+            'classes' => 'bg-light text-dark',
             'can' => 'super-admin',
             'submenu' => [
                 [
                     'text' => 'Hospitals',
                     'url' => 'admin/hospitals',
                     'icon' => 'fas fa-fw fa-hospital',
+                    'classes' => 'text-primary',
                 ],
                 [
                     'text' => 'Specialties',
                     'url' => 'admin/specialties',
                     'icon' => 'fas fa-fw fa-stethoscope',
                     'active' => ['admin/specialties*'],
+                    'classes' => 'text-primary',
                 ],
                 [
                     'text' => 'Consultants',
                     'url' => 'admin/consultants',
                     'icon' => 'fas fa-fw fa-user-md',
                     'active' => ['admin/consultants*'],
+                    'classes' => 'text-primary',
                 ],
                 [
                     'text' => 'Services',
                     'url' => 'admin/services',
                     'icon' => 'fas fa-fw fa-clipboard-list',
                     'active' => ['admin/services*'],
+                    'classes' => 'text-primary',
                 ],
                 [
                     'text' => 'Clinics',
                     'url' => 'admin/clinics',
                     'icon' => 'fas fa-fw fa-clinic-medical',
                     'active' => ['admin/clinics*'],
+                    'classes' => 'text-primary',
                 ],
                 [
                     'text' => 'GPs',
                     'url' => 'admin/gps',
                     'icon' => 'fas fa-fw fa-user-nurse',
                     'active' => ['admin/gps*'],
+                    'classes' => 'text-primary',
                 ],
             ],
         ],
         [
             'header' => 'AGENT ADMINISTRATION',
-            'classes' => 'text-bold text-uppercase bg-orange',
+            'classes' => 'text-bold text-uppercase bg-teal',
             'can' => 'super-admin',
         ],
         [
             'text' => 'Booking Agent Management',
             'icon' => 'fas fa-fw fa-users-cog',
-            'classes' => 'text-bold bg-light text-dark',
+            'classes' => 'bg-light text-dark',
             'can' => 'super-admin',
             'submenu' => [
                 [
@@ -398,24 +404,26 @@ return [
                     'url' => 'admin/companies',
                     'icon' => 'fas fa-fw fa-building',
                     'active' => ['admin/companies*'],
+                    'classes' => 'text-primary',
                 ],
                 [
                     'text' => 'Booking Agents',
                     'url' => 'admin/booking-agents',
                     'icon' => 'fas fa-fw fa-user-tie',
                     'active' => ['admin/booking-agents*'],
+                    'classes' => 'text-primary',
                 ],
             ],
         ],
         [
             'header' => 'REFERRAL MANAGEMENT',
-            'classes' => 'text-bold text-uppercase bg-orange',
+            'classes' => 'text-bold text-uppercase bg-teal',
             'can' => 'super-admin',
         ],
         [
             'text' => 'Referral Management',
             'icon' => 'fas fa-fw fa-exchange-alt',
-            'classes' => 'text-bold bg-light text-dark',
+            'classes' => 'bg-light text-dark',
             'can' => 'super-admin',
             'submenu' => [
                 [
@@ -423,36 +431,40 @@ return [
                     'url' => 'admin/referrals',
                     'icon' => 'fas fa-fw fa-file-medical',
                     'active' => ['admin/referrals*'],
+                    'classes' => 'text-primary',
                 ],
                 [
                     'text' => 'Loyalty Points',
                     'url' => 'admin/loyalty-point-settings',
                     'icon' => 'fas fa-fw fa-star',
                     'active' => ['admin/loyalty-point-settings*'],
+                    'classes' => 'text-primary',
                 ],
                 [
                     'text' => 'GP Loyalty Points',
                     'url' => 'admin/gp-loyalty-points',
                     'icon' => 'fas fa-fw fa-user-md',
                     'active' => ['admin/gp-loyalty-points*'],
+                    'classes' => 'text-primary',
                 ],
                 [
                     'text' => 'Booking Agent Loyalty Points',
                     'url' => 'admin/booking-agent-loyalty-points',
                     'icon' => 'fas fa-fw fa-user-tie',
                     'active' => ['admin/booking-agent-loyalty-points*'],
+                    'classes' => 'text-primary',
                 ],
             ],
         ],
         [
             'header' => 'GP REFERRAL PROGRAM',
-            'classes' => 'text-bold text-uppercase bg-orange',
+            'classes' => 'text-bold text-uppercase bg-teal',
             'can' => 'super-admin',
         ],
         [
             'text' => 'GP Referral Program',
             'icon' => 'fas fa-fw fa-project-diagram',
-            'classes' => 'text-bold bg-light text-dark',
+            'classes' => 'bg-light text-dark',
             'can' => 'super-admin',
             'submenu' => [
                 [
@@ -460,18 +472,34 @@ return [
                     'url' => 'admin/gp-referral-programs',
                     'icon' => 'fas fa-fw fa-list',
                     'active' => ['admin/gp-referral-programs*'],
+                    'classes' => 'text-primary',
                 ],
                 [
                     'text' => 'Program Participation',
                     'url' => 'admin/gp-referral-program-participation',
                     'icon' => 'fas fa-fw fa-users',
                     'active' => ['admin/gp-referral-program-participation*'],
+                    'classes' => 'text-primary',
                 ],
             ],
         ],
         [
             'header' => 'DOCTOR DASHBOARD',
-            'classes' => 'text-bold text-uppercase bg-orange',
+            'classes' => 'text-bold text-uppercase bg-teal',
+            'can' => 'gp-doctor',
+        ],
+        [
+            'text' => 'GP Dashboard',
+            'url' => 'doctor/dashboard',
+            'icon' => 'fas fa-fw fa-tachometer-alt',
+            'classes' => 'bg-light text-dark',
+            'can' => 'gp-doctor',
+        ],
+        [
+            'text' => 'GP Statistics',
+            'url' => 'doctor/statistics',
+            'icon' => 'fas fa-fw fa-chart-bar',
+            'classes' => 'bg-light text-dark',
             'can' => 'gp-doctor',
         ],
         [
@@ -480,6 +508,7 @@ return [
             'icon' => 'fas fa-fw fa-file-medical',
             'can' => 'gp-doctor',
             'active' => ['doctor/referrals*'],
+            'classes' => 'bg-light text-primary',
         ],
         [
             'text' => 'GP Loyalty Points',
@@ -487,10 +516,11 @@ return [
             'icon' => 'fas fa-fw fa-star',
             'can' => 'gp-doctor',
             'active' => ['doctor/loyalty-points*'],
+            'classes' => 'bg-light text-primary',
         ],
         [
             'header' => 'GP REFERRAL PROGRAM',
-            'classes' => 'text-bold text-uppercase bg-orange',
+            'classes' => 'text-bold text-uppercase bg-teal',
             'can' => 'gp-doctor',
         ],
         [
@@ -499,18 +529,55 @@ return [
             'icon' => 'fas fa-fw fa-clipboard-list',
             'can' => 'gp-doctor',
             'active' => ['doctor/gp-referral-programs*'],
+            'classes' => 'bg-light text-primary',
+        ],
+        
+        // Consultant Dashboard
+        [
+            'header' => 'CONSULTANT DASHBOARD',
+            'classes' => 'text-bold text-uppercase bg-teal',
+            'can' => 'consultant',
+        ],
+        [
+            'text' => 'Consultant Dashboard',
+            'url' => 'consultant/dashboard',
+            'icon' => 'fas fa-fw fa-tachometer-alt',
+            'classes' => 'bg-light text-dark',
+            'can' => 'consultant',
+        ],
+        [
+            'text' => 'My Referrals',
+            'url' => 'consultant/referrals',
+            'icon' => 'fas fa-fw fa-file-medical',
+            'can' => 'consultant',
+            'active' => ['consultant/referrals*'],
+            'classes' => 'bg-light text-primary',
         ],
         
         // Hospital Admin Dashboard
         [
             'header' => 'HOSPITAL ADMINISTRATION',
-            'classes' => 'text-bold text-uppercase bg-orange',
+            'classes' => 'text-bold text-uppercase bg-teal',
+            'can' => 'hospital-admin',
+        ],
+        [
+            'text' => 'Hospital Dashboard',
+            'url' => 'hospital/dashboard',
+            'icon' => 'fas fa-fw fa-tachometer-alt',
+            'classes' => 'bg-light text-dark',
+            'can' => 'hospital-admin',
+        ],
+        [
+            'text' => 'Hospital Statistics',
+            'url' => 'hospital/statistics',
+            'icon' => 'fas fa-fw fa-chart-bar',
+            'classes' => 'bg-light text-dark',
             'can' => 'hospital-admin',
         ],
         [
             'text' => 'Admin Management',
             'icon' => 'fas fa-fw fa-cogs',
-            'classes' => 'text-bold bg-light text-dark',
+            'classes' => 'bg-light text-dark',
             'can' => 'hospital-admin',
             'submenu' => [
                 [
@@ -518,48 +585,54 @@ return [
                     'url' => 'hospital/hospital',
                     'icon' => 'fas fa-fw fa-hospital',
                     'active' => ['hospital/hospital*'],
+                    'classes' => 'text-primary',
                 ],
                 [
                     'text' => 'Specialties',
                     'url' => 'hospital/specialties',
                     'icon' => 'fas fa-fw fa-stethoscope',
                     'active' => ['hospital/specialties*'],
+                    'classes' => 'text-primary',
                 ],
                 [
                     'text' => 'Consultants',
                     'url' => 'hospital/consultants',
                     'icon' => 'fas fa-fw fa-user-md',
                     'active' => ['hospital/consultants*'],
+                    'classes' => 'text-primary',
                 ],
                 [
                     'text' => 'Services',
                     'url' => 'hospital/services',
                     'icon' => 'fas fa-fw fa-clipboard-list',
                     'active' => ['hospital/services*'],
+                    'classes' => 'text-primary',
                 ],
                 [
                     'text' => 'Clinics',
                     'url' => 'hospital/clinics',
                     'icon' => 'fas fa-fw fa-clinic-medical',
                     'active' => ['hospital/clinics*'],
+                    'classes' => 'text-primary',
                 ],
                 [
                     'text' => 'GPs',
                     'url' => 'hospital/gps',
                     'icon' => 'fas fa-fw fa-user-nurse',
                     'active' => ['hospital/gps*'],
+                    'classes' => 'text-primary',
                 ],
             ],
         ],
         [
             'header' => 'REFERRAL MANAGEMENT',
-            'classes' => 'text-bold text-uppercase bg-orange',
+            'classes' => 'text-bold text-uppercase bg-teal',
             'can' => 'hospital-admin',
         ],
         [
             'text' => 'Referral Management',
             'icon' => 'fas fa-fw fa-exchange-alt',
-            'classes' => 'text-bold bg-light text-dark',
+            'classes' => 'bg-light text-dark',
             'can' => 'hospital-admin',
             'submenu' => [
                 [
@@ -567,24 +640,28 @@ return [
                     'url' => 'hospital/referrals',
                     'icon' => 'fas fa-fw fa-file-medical',
                     'active' => ['hospital/referrals*'],
+                    'classes' => 'text-primary',
                 ],
                 [
                     'text' => 'Loyalty Points',
                     'url' => 'hospital/loyalty-points',
                     'icon' => 'fas fa-fw fa-star',
                     'active' => ['hospital/loyalty-points*'],
+                    'classes' => 'text-primary',
                 ],
                 [
                     'text' => 'GP Loyalty Points',
                     'url' => 'hospital/gp-loyalty-points',
                     'icon' => 'fas fa-fw fa-user-md',
                     'active' => ['hospital/gp-loyalty-points*'],
+                    'classes' => 'text-primary',
                 ],
                 [
                     'text' => 'Booking Agent Loyalty Points',
                     'url' => 'hospital/booking-agent-loyalty-points',
                     'icon' => 'fas fa-fw fa-user-tie',
                     'active' => ['hospital/booking-agent-loyalty-points*'],
+                    'classes' => 'text-primary',
                 ],
             ],
         ],

@@ -80,6 +80,177 @@
         </div>
     </div>
 
+    <!-- Performance Statistics -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-primary card-tabs">
+                <div class="card-header p-0 pt-1">
+                    <ul class="nav nav-tabs" id="performance-tabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="gp-performance-tab" data-toggle="pill" href="#gp-performance" 
+                                role="tab" aria-controls="gp-performance" aria-selected="true">
+                                GP Doctors Performance
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="consultant-performance-tab" data-toggle="pill" href="#consultant-performance" 
+                                role="tab" aria-controls="consultant-performance" aria-selected="false">
+                                Consultants Performance
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="specialty-performance-tab" data-toggle="pill" href="#specialty-performance" 
+                                role="tab" aria-controls="specialty-performance" aria-selected="false">
+                                Specialties Performance
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="clinic-performance-tab" data-toggle="pill" href="#clinic-performance" 
+                                role="tab" aria-controls="clinic-performance" aria-selected="false">
+                                Clinics Performance
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-body">
+                    <div class="tab-content" id="performance-tabsContent">
+                        <!-- GP Performance Tab -->
+                        <div class="tab-pane fade show active" id="gp-performance" role="tabpanel" aria-labelledby="gp-performance-tab">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>GP Name</th>
+                                                    <th>Referrals Count</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @forelse($gpPerformance as $gp)
+                                                    <tr>
+                                                        <td>{{ $gp->name }}</td>
+                                                        <td>{{ $gp->referral_count }}</td>
+                                                    </tr>
+                                                @empty
+                                                    <tr>
+                                                        <td colspan="2" class="text-center">No data available</td>
+                                                    </tr>
+                                                @endforelse
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <canvas id="gpPerformanceChart" style="min-height: 300px; height: 300px; max-height: 300px; max-width: 100%;"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Consultant Performance Tab -->
+                        <div class="tab-pane fade" id="consultant-performance" role="tabpanel" aria-labelledby="consultant-performance-tab">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>Consultant Name</th>
+                                                    <th>Referrals Count</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @forelse($consultantPerformance as $consultant)
+                                                    <tr>
+                                                        <td>{{ $consultant->name }}</td>
+                                                        <td>{{ $consultant->referral_count }}</td>
+                                                    </tr>
+                                                @empty
+                                                    <tr>
+                                                        <td colspan="2" class="text-center">No data available</td>
+                                                    </tr>
+                                                @endforelse
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <canvas id="consultantPerformanceChart" style="min-height: 300px; height: 300px; max-height: 300px; max-width: 100%;"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Specialty Performance Tab -->
+                        <div class="tab-pane fade" id="specialty-performance" role="tabpanel" aria-labelledby="specialty-performance-tab">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>Specialty Name</th>
+                                                    <th>Referrals Count</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @forelse($specialtyPerformance as $specialty)
+                                                    <tr>
+                                                        <td>{{ $specialty->name }}</td>
+                                                        <td>{{ $specialty->referral_count }}</td>
+                                                    </tr>
+                                                @empty
+                                                    <tr>
+                                                        <td colspan="2" class="text-center">No data available</td>
+                                                    </tr>
+                                                @endforelse
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <canvas id="specialtyPerformanceChart" style="min-height: 300px; height: 300px; max-height: 300px; max-width: 100%;"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Clinic Performance Tab -->
+                        <div class="tab-pane fade" id="clinic-performance" role="tabpanel" aria-labelledby="clinic-performance-tab">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>Clinic Name</th>
+                                                    <th>Referrals Count</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @forelse($clinicPerformance as $clinic)
+                                                    <tr>
+                                                        <td>{{ $clinic->name }}</td>
+                                                        <td>{{ $clinic->referral_count }}</td>
+                                                    </tr>
+                                                @empty
+                                                    <tr>
+                                                        <td colspan="2" class="text-center">No data available</td>
+                                                    </tr>
+                                                @endforelse
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <canvas id="clinicPerformanceChart" style="min-height: 300px; height: 300px; max-height: 300px; max-width: 100%;"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Detailed Statistics -->
     <div class="row">
         <!-- Referral Stats -->
@@ -248,22 +419,21 @@
                 {{ $stats['specialties'] ?? 0 }}
             ];
             const backgroundColors = [
-                'rgba(60, 179, 113, 0.6)',
-                'rgba(255, 165, 0, 0.6)',
-                'rgba(106, 90, 205, 0.6)',
-                'rgba(255, 99, 71, 0.6)'
+                'rgba(60,141,188,0.9)',
+                'rgba(210,214,222,0.9)',
+                'rgba(255,193,7,0.9)',
+                'rgba(76,175,80,0.9)'
             ];
             
-            // Create doughnut chart for system distribution
+            // Create pie chart for system distribution
             const distributionChartCanvas = document.getElementById('distributionChart').getContext('2d');
             new Chart(distributionChartCanvas, {
-                type: 'doughnut',
+                type: 'pie',
                 data: {
                     labels: distributionLabels,
                     datasets: [{
                         data: distributionData,
                         backgroundColor: backgroundColors,
-                        borderWidth: 1
                     }]
                 },
                 options: {
@@ -271,6 +441,142 @@
                     responsive: true,
                 }
             });
+            
+            // GP Performance Chart
+            if (document.getElementById('gpPerformanceChart')) {
+                const gpLabels = @json($gpPerformance->pluck('name'));
+                const gpData = @json($gpPerformance->pluck('referral_count'));
+                
+                const gpChartCanvas = document.getElementById('gpPerformanceChart').getContext('2d');
+                new Chart(gpChartCanvas, {
+                    type: 'bar',
+                    data: {
+                        labels: gpLabels,
+                        datasets: [{
+                            label: 'Referrals',
+                            backgroundColor: 'rgba(60,141,188,0.9)',
+                            borderColor: 'rgba(60,141,188,0.8)',
+                            pointRadius: false,
+                            pointColor: '#3b8bba',
+                            pointStrokeColor: 'rgba(60,141,188,1)',
+                            pointHighlightFill: '#fff',
+                            pointHighlightStroke: 'rgba(60,141,188,1)',
+                            data: gpData
+                        }]
+                    },
+                    options: {
+                        maintainAspectRatio: false,
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Consultant Performance Chart
+            if (document.getElementById('consultantPerformanceChart')) {
+                const consultantLabels = @json($consultantPerformance->pluck('name'));
+                const consultantData = @json($consultantPerformance->pluck('referral_count'));
+                
+                const consultantChartCanvas = document.getElementById('consultantPerformanceChart').getContext('2d');
+                new Chart(consultantChartCanvas, {
+                    type: 'bar',
+                    data: {
+                        labels: consultantLabels,
+                        datasets: [{
+                            label: 'Referrals',
+                            backgroundColor: 'rgba(255,193,7,0.9)',
+                            borderColor: 'rgba(255,193,7,0.8)',
+                            pointRadius: false,
+                            pointColor: '#3b8bba',
+                            pointStrokeColor: 'rgba(255,193,7,1)',
+                            pointHighlightFill: '#fff',
+                            pointHighlightStroke: 'rgba(255,193,7,1)',
+                            data: consultantData
+                        }]
+                    },
+                    options: {
+                        maintainAspectRatio: false,
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Specialty Performance Chart
+            if (document.getElementById('specialtyPerformanceChart')) {
+                const specialtyLabels = @json($specialtyPerformance->pluck('name'));
+                const specialtyData = @json($specialtyPerformance->pluck('referral_count'));
+                
+                const specialtyChartCanvas = document.getElementById('specialtyPerformanceChart').getContext('2d');
+                new Chart(specialtyChartCanvas, {
+                    type: 'bar',
+                    data: {
+                        labels: specialtyLabels,
+                        datasets: [{
+                            label: 'Referrals',
+                            backgroundColor: 'rgba(76,175,80,0.9)',
+                            borderColor: 'rgba(76,175,80,0.8)',
+                            pointRadius: false,
+                            pointColor: '#3b8bba',
+                            pointStrokeColor: 'rgba(76,175,80,1)',
+                            pointHighlightFill: '#fff',
+                            pointHighlightStroke: 'rgba(76,175,80,1)',
+                            data: specialtyData
+                        }]
+                    },
+                    options: {
+                        maintainAspectRatio: false,
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Clinic Performance Chart
+            if (document.getElementById('clinicPerformanceChart')) {
+                const clinicLabels = @json($clinicPerformance->pluck('name'));
+                const clinicData = @json($clinicPerformance->pluck('referral_count'));
+                
+                const clinicChartCanvas = document.getElementById('clinicPerformanceChart').getContext('2d');
+                new Chart(clinicChartCanvas, {
+                    type: 'bar',
+                    data: {
+                        labels: clinicLabels,
+                        datasets: [{
+                            label: 'Referrals',
+                            backgroundColor: 'rgba(233,30,99,0.9)',
+                            borderColor: 'rgba(233,30,99,0.8)',
+                            pointRadius: false,
+                            pointColor: '#3b8bba',
+                            pointStrokeColor: 'rgba(233,30,99,1)',
+                            pointHighlightFill: '#fff',
+                            pointHighlightStroke: 'rgba(233,30,99,1)',
+                            data: clinicData
+                        }]
+                    },
+                    options: {
+                        maintainAspectRatio: false,
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
         });
     </script>
 @stop 

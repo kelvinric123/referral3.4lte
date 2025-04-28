@@ -43,7 +43,7 @@
                 <div class="icon">
                     <i class="fas fa-file-medical"></i>
                 </div>
-                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                <a href="{{ route('consultant.referrals.index') }}" class="small-box-footer">View Referrals <i class="fas fa-arrow-circle-right"></i></a>
             </div>
         </div>
         

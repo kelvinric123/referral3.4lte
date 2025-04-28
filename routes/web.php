@@ -106,6 +106,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:super-admin'])
 Route::prefix('hospital')->name('hospital.')->middleware(['auth', 'role:hospital-admin'])->group(function () {
     Route::get('/dashboard', [HospitalDashboardController::class, 'index'])->name('dashboard');
     
+    // Hospital Statistics
+    Route::get('/statistics', 'App\Http\Controllers\Hospital\StatisticsController@index');
+    
     // Hospital Management
     Route::get('/hospital', [App\Http\Controllers\Hospital\HospitalController::class, 'show'])->name('my-hospital');
     Route::get('/hospital/edit', [App\Http\Controllers\Hospital\HospitalController::class, 'edit'])->name('my-hospital.edit');
@@ -147,11 +150,18 @@ Route::prefix('hospital')->name('hospital.')->middleware(['auth', 'role:hospital
 // Consultant Routes
 Route::prefix('consultant')->name('consultant.')->middleware(['auth', 'role:consultant,super-admin'])->group(function () {
     Route::get('/dashboard', [ConsultantDashboardController::class, 'index'])->name('dashboard');
+    
+    // Referral Management
+    Route::get('/referrals', [App\Http\Controllers\Consultant\ReferralController::class, 'index'])->name('referrals.index');
+    Route::get('/referrals/{referral}', [App\Http\Controllers\Consultant\ReferralController::class, 'show'])->name('referrals.show');
 });
 
 // GP Doctor Routes
 Route::prefix('doctor')->name('doctor.')->middleware(['auth', 'role:gp-doctor'])->group(function () {
     Route::get('/dashboard', [DoctorDashboardController::class, 'index'])->name('dashboard');
+    
+    // GP Statistics
+    Route::get('/statistics', 'App\Http\Controllers\Doctor\StatisticsController@index');
     
     // Referrals
     Route::get('/referrals', [App\Http\Controllers\Doctor\ReferralController::class, 'index'])->name('referrals.index');
