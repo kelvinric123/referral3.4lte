@@ -515,13 +515,24 @@
                 loadColumnVisibilityPreferences();
             }, 200);
             
+            // Prevent dropdowns from closing when clicking inside them
+            $(document).on('click', '.dropdown-menu', function(e) {
+                e.stopPropagation();
+            });
+            
+            // Prevent status dropdowns from automatically closing
+            $('.dropdown-menu button[type="submit"]').on('click', function(e) {
+                e.stopPropagation();
+            });
+            
             // Confirmation dialog for status change
             $('.status-form button[type="submit"]').on('click', function(e) {
                 e.preventDefault();
                 
                 var $button = $(this);
+                var $form = $button.closest('form');
                 var statusValue = $button.val();
-                var referralId = $button.closest('form').attr('action').split('/').pop();
+                var referralId = $form.attr('action').split('/').pop();
                 var confirmMessage = 'Are you sure you want to change the status to ' + statusValue + '?';
                 
                 // Add context based on the status transition
@@ -541,7 +552,22 @@
                 }
                 
                 if (confirm(confirmMessage)) {
-                    $button.closest('form').submit();
+                    $.ajax({
+                        url: $form.attr('action'),
+                        type: 'POST',
+                        data: $form.serialize() + '&_method=PATCH&status=' + statusValue,
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function(response) {
+                            // Reload the page to show the updated status
+                            window.location.reload();
+                        },
+                        error: function(xhr) {
+                            alert('Error updating status. Please try again.');
+                            console.error(xhr);
+                        }
+                    });
                 }
             });
             

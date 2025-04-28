@@ -309,11 +309,20 @@
 
 @section('css')
     <link rel="stylesheet" href="/css/admin_custom.css">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme@x.x.x/dist/select2-bootstrap4.min.css" rel="stylesheet" />
 @stop
 
 @section('js')
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
         $(document).ready(function() {
+            // Initialize Select2 for all select elements
+            $('select').select2({
+                theme: 'bootstrap4',
+                width: '100%'
+            });
+            
             // Force patient name to uppercase
             $('#patient_name').on('input', function() {
                 $(this).val($(this).val().toUpperCase());
@@ -385,13 +394,19 @@
                 const gender = $('#consultant_gender').val();
                 const language = $('#consultant_language').val();
                 
-                // Store current selection
+                // Store current selection if any
                 const currentConsultant = $('#consultant_id').val();
                 
-                // First show all options
-                $('#consultant_id option').show();
+                // Create a temporary div to store all original options
+                if (!window.originalConsultantOptions) {
+                    // First time: save all original options
+                    window.originalConsultantOptions = $('#consultant_id').html();
+                }
                 
-                // Then hide filtered-out options instead of disabling them
+                // Reset to original options
+                $('#consultant_id').html(window.originalConsultantOptions);
+                
+                // Filter options
                 $('#consultant_id option').each(function() {
                     if ($(this).val() === '') {
                         return; // Skip the placeholder option
@@ -416,27 +431,35 @@
                     
                     // Language filter
                     if (language) {
-                        const consultantLanguages = $(this).data('languages');
-                        if (!consultantLanguages.includes(language)) {
+                        const consultantLanguages = $(this).data('languages') || [];
+                        if (!Array.isArray(consultantLanguages)) {
+                            // Try parsing as JSON if it's a string
+                            try {
+                                const parsedLanguages = JSON.parse(consultantLanguages);
+                                if (!parsedLanguages.includes(language)) {
+                                    match = false;
+                                }
+                            } catch (e) {
+                                match = false;
+                            }
+                        } else if (!consultantLanguages.includes(language)) {
                             match = false;
                         }
                     }
                     
                     if (!match) {
-                        $(this).hide();
+                        $(this).remove();
                     }
                 });
                 
-                // Refresh select2 to apply the changes
-                $('#consultant_id').select2('destroy').select2({
-                    theme: 'bootstrap4',
-                    width: '100%'
-                });
-                
-                // Restore selection if the option is still available
-                if (currentConsultant && $('#consultant_id option[value="' + currentConsultant + '"]:visible').length) {
-                    $('#consultant_id').val(currentConsultant).trigger('change.select2');
+                // Try to restore previous selection if the option is still available
+                if (currentConsultant && $('#consultant_id option[value="' + currentConsultant + '"]').length) {
+                    $('#consultant_id').val(currentConsultant);
                 }
+                
+                // Refresh the select2 instance
+                // Trigger change to refresh Select2
+                $('#consultant_id').trigger('change');
             }
             
             // Bind events for consultant filtering
