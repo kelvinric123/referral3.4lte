@@ -3,7 +3,6 @@
 @section('title', config('app.name', 'Medical Referral System') . ' - Booking Agent Login')
 
 @section('adminlte_css')
-    <link rel="stylesheet" href="{{ asset('vendor/icheck-bootstrap/icheck-bootstrap.min.css') }}">
     <style>
         .login-page {
             background-color: #f4f6f9;
@@ -47,6 +46,12 @@
         .card-header h3 {
             font-size: 1.5rem;
             padding: 10px 0;
+        }
+        .form-check {
+            padding-left: 0;
+        }
+        .form-check-input {
+            margin-right: 8px;
         }
     </style>
     @stack('css')
@@ -109,9 +114,9 @@
                     <!-- Login field -->
                     <div class="row">
                         <div class="col-8">
-                            <div class="icheck-primary">
-                                <input type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
-                                <label for="remember">Remember Me</label>
+                            <div class="form-check">
+                                <input type="checkbox" name="remember" id="remember" class="form-check-input" {{ old('remember') ? 'checked' : '' }}>
+                                <label for="remember" class="form-check-label">Remember Me</label>
                             </div>
                         </div>
                         <div class="col-4">

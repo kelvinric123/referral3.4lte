@@ -53,7 +53,6 @@ class LoginController extends Controller
         $request->validate([
             $this->username() => 'required|string',
             'password' => 'required|string',
-            'role' => 'required|string',
         ]);
     }
 
@@ -70,33 +69,18 @@ class LoginController extends Controller
         $user->last_login_at = now();
         $user->save();
 
-        // Verify that the user has the selected role
-        $selectedRole = $request->input('role');
-        if (!$user->hasRole($selectedRole)) {
+        // Verify that the user has super admin role
+        if (!$user->hasRole('super-admin')) {
             // Log the user out
             $this->guard()->logout();
             $request->session()->invalidate();
             
             // Throw a validation error
             throw ValidationException::withMessages([
-                'role' => ['You do not have access to this role.'],
+                'email' => ['You do not have super admin access.'],
             ]);
         }
 
-        // Redirect based on selected role
-        switch ($selectedRole) {
-            case 'super-admin':
-                return redirect()->route('admin.dashboard');
-            case 'hospital-admin':
-                return redirect()->route('hospital.dashboard');
-            case 'consultant':
-                return redirect()->route('consultant.dashboard');
-            case 'gp-doctor':
-                return redirect()->route('doctor.dashboard');
-            case 'booking-agent':
-                return redirect()->route('booking.dashboard');
-            default:
-                return redirect($this->redirectTo);
-        }
+        return redirect()->route('admin.dashboard');
     }
 }
