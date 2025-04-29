@@ -179,6 +179,11 @@ Route::prefix('doctor')->name('doctor.')->middleware(['auth', 'role:gp-doctor'])
     // Loyalty Points
     Route::get('/loyalty-points', [App\Http\Controllers\Doctor\LoyaltyPointController::class, 'index'])->name('loyalty-points.index');
     
+    // Profile Routes
+    Route::get('/profile/hospital', [App\Http\Controllers\Doctor\ProfileController::class, 'hospital'])->name('profile.hospital');
+    Route::get('/profile/specialty', [App\Http\Controllers\Doctor\ProfileController::class, 'specialty'])->name('profile.specialty');
+    Route::get('/profile/consultant', [App\Http\Controllers\Doctor\ProfileController::class, 'consultant'])->name('profile.consultant');
+    
     // GP Referral Programs
     Route::get('/gp-referral-programs', [App\Http\Controllers\Doctor\GPReferralProgramController::class, 'index'])->name('gp-referral-programs.index');
     Route::get('/gp-referral-programs/{gpReferralProgram}', [App\Http\Controllers\Doctor\GPReferralProgramController::class, 'show'])->name('gp-referral-programs.show');

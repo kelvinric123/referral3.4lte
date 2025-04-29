@@ -14,7 +14,7 @@ class HospitalSeeder extends Seeder
     {
         $hospitals = [
             [
-                'name' => 'Hospital Kuala Lumpur',
+                'name' => 'QMed Demo Hospital 1',
                 'address' => 'Jalan Pahang',
                 'city' => 'Kuala Lumpur',
                 'state' => 'Wilayah Persekutuan',
@@ -27,7 +27,7 @@ class HospitalSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'name' => 'Hospital Pulau Pinang',
+                'name' => 'QMed Demo Hospital 2',
                 'address' => 'Jalan Residensi',
                 'city' => 'Georgetown',
                 'state' => 'Pulau Pinang',
@@ -40,7 +40,7 @@ class HospitalSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'name' => 'Gleneagles Hospital Kuala Lumpur',
+                'name' => 'QMed Demo Hospital 3',
                 'address' => '286, Jalan Ampang',
                 'city' => 'Kuala Lumpur',
                 'state' => 'Wilayah Persekutuan',
@@ -53,7 +53,7 @@ class HospitalSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'name' => 'Sunway Medical Centre',
+                'name' => 'QMed Demo Hospital 4',
                 'address' => '5, Jalan Lagoon Selatan, Bandar Sunway',
                 'city' => 'Petaling Jaya',
                 'state' => 'Selangor',
@@ -66,7 +66,7 @@ class HospitalSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'name' => 'Hospital Sultanah Aminah',
+                'name' => 'QMed Demo Hospital 5',
                 'address' => 'Jalan Persiaran Abu Bakar Sultan',
                 'city' => 'Johor Bahru',
                 'state' => 'Johor',

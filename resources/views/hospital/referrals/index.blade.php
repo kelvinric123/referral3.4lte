@@ -262,33 +262,20 @@
             // Debug log
             console.log('Document ready, initializing status change handlers');
             
-            // Prevent dropdowns from closing when clicking inside them
-            $(document).on('click', '.dropdown-menu', function(e) {
-                console.log('Dropdown menu clicked, preventing close');
-                e.stopPropagation();
-            });
-            
-            // Prevent status dropdowns from automatically closing
-            $('.dropdown-menu button[type="submit"]').on('click', function(e) {
-                console.log('Submit button clicked, preventing dropdown close');
-                e.stopPropagation();
-            });
-            
-            // Confirmation dialog for status change
+            // Handle status change form submission
             $('.status-form button[type="submit"]').on('click', function(e) {
-                console.log('Status change button clicked');
                 e.preventDefault();
+                e.stopPropagation();
                 
                 var $button = $(this);
                 var $form = $button.closest('form');
                 var statusValue = $button.val();
                 var referralId = $form.attr('action').split('/').pop();
                 
-                console.log('Status change details:', {
+                console.log('Status change clicked:', {
                     statusValue: statusValue,
                     referralId: referralId,
-                    formAction: $form.attr('action'),
-                    formMethod: $form.attr('method')
+                    formAction: $form.attr('action')
                 });
                 
                 var confirmMessage = 'Are you sure you want to change the status to ' + statusValue + '?';
@@ -310,11 +297,16 @@
                 }
                 
                 if (confirm(confirmMessage)) {
-                    console.log('Confirmation accepted, submitting form');
+                    console.log('Submitting form...');
                     $form.submit();
                 } else {
-                    console.log('Status change cancelled by user');
+                    console.log('Status change cancelled');
                 }
+            });
+            
+            // Keep dropdowns open when clicking inside
+            $('.dropdown-menu').on('click', function(e) {
+                e.stopPropagation();
             });
         });
     </script>

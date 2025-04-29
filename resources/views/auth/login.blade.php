@@ -68,7 +68,7 @@
         <!-- Card -->
         <div class="card card-outline card-primary">
             <div class="card-header">
-                <h3 class="card-title float-none text-center">Sign in to start your session</h3>
+                <h3 class="card-title float-none text-center">Sign in as Super Admin</h3>
             </div>
             <div class="card-body login-card-body">
                 <form action="{{ route('login') }}" method="post">
@@ -106,35 +106,6 @@
                         @enderror
                     </div>
 
-                    <!-- Role selection field -->
-                    <div class="input-group">
-                        <select name="role" class="form-control @error('role') is-invalid @enderror">
-                            <option value="" disabled selected>Select Role</option>
-                            <option value="super-admin" {{ old('role') == 'super-admin' ? 'selected' : '' }}>Super Admin</option>
-                            <option value="hospital-admin" {{ old('role') == 'hospital-admin' ? 'selected' : '' }}>Hospital Admin</option>
-                            <option value="consultant" {{ old('role') == 'consultant' ? 'selected' : '' }}>Consultant</option>
-                            <option value="gp-doctor" {{ old('role') == 'gp-doctor' ? 'selected' : '' }}>GP Doctor</option>
-                            <option value="booking-agent" {{ old('role') == 'booking-agent' ? 'selected' : '' }}>Booking Agent</option>
-                        </select>
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <span class="fas fa-user-tag"></span>
-                            </div>
-                        </div>
-                        @error('role')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                    </div>
-
-                    <!-- Consultant Default Password Info -->
-                    <div class="consultant-password-info mt-2 mb-3 d-none">
-                        <div class="alert alert-info py-2">
-                            <small><i class="fas fa-info-circle mr-1"></i> Default consultant password is <strong>qmed.asia</strong></small>
-                        </div>
-                    </div>
-
                     <!-- Login field -->
                     <div class="row">
                         <div class="col-8">
@@ -155,14 +126,20 @@
                     <p class="mb-0">
                         <a href="{{ route('password.request') }}">I forgot my password</a>
                     </p>
-                    <p class="mt-3 mb-0">
-                        <a href="{{ route('gp.login.form') }}" class="btn btn-outline-success btn-sm">
-                            <i class="fas fa-user-md mr-1"></i> GP Doctor Login
+                    <div class="mt-3">
+                        <a href="{{ route('hospital.login.form') }}" class="btn btn-outline-warning btn-block mb-2">
+                            <i class="fas fa-hospital mr-2"></i> Hospital Admin Login
                         </a>
-                        <a href="{{ route('consultant.login.form') }}" class="btn btn-outline-info btn-sm ml-2">
-                            <i class="fas fa-user-md mr-1"></i> Consultant Login
+                        <a href="{{ route('consultant.login.form') }}" class="btn btn-outline-info btn-block mb-2">
+                            <i class="fas fa-user-md mr-2"></i> Consultant Login
                         </a>
-                    </p>
+                        <a href="{{ route('gp.login.form') }}" class="btn btn-outline-success btn-block mb-2">
+                            <i class="fas fa-user-md mr-2"></i> GP Doctor Login
+                        </a>
+                        <a href="{{ route('booking-agent.login.form') }}" class="btn btn-outline-secondary btn-block">
+                            <i class="fas fa-calendar-check mr-2"></i> Booking Agent Login
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -172,19 +149,7 @@
 @section('adminlte_js')
     <script>
         $(document).ready(function() {
-            // Show/hide consultant password info based on role selection
-            $('select[name="role"]').change(function() {
-                if ($(this).val() === 'consultant') {
-                    $('.consultant-password-info').removeClass('d-none');
-                } else {
-                    $('.consultant-password-info').addClass('d-none');
-                }
-            });
-            
-            // Check initial value on page load
-            if ($('select[name="role"]').val() === 'consultant') {
-                $('.consultant-password-info').removeClass('d-none');
-            }
+            // Remove the consultant password info script since we removed the role selection
         });
     </script>
     @stack('js')

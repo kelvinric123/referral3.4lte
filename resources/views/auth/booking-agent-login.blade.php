@@ -1,37 +1,83 @@
 @extends('adminlte::master')
 
-@section('adminlte_css_pre')
-    <link rel="stylesheet" href="{{ asset('vendor/icheck-bootstrap/icheck-bootstrap.min.css') }}">
-@stop
+@section('title', config('app.name', 'Medical Referral System') . ' - Booking Agent Login')
 
 @section('adminlte_css')
+    <link rel="stylesheet" href="{{ asset('vendor/icheck-bootstrap/icheck-bootstrap.min.css') }}">
+    <style>
+        .login-page {
+            background-color: #f4f6f9;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .login-box {
+            width: 450px;
+            margin: 0;
+        }
+        .login-card-body {
+            padding: 35px;
+        }
+        .input-group {
+            margin-bottom: 1.8rem !important;
+        }
+        .input-group input {
+            padding: 12px;
+            font-size: 1.1rem;
+            height: auto;
+        }
+        .btn-primary {
+            padding: 12px;
+            font-size: 1.1rem;
+        }
+        .login-logo {
+            margin-bottom: 30px;
+        }
+        .login-logo img {
+            margin-bottom: 15px;
+        }
+        .login-logo b {
+            font-weight: 700;
+            font-size: 2rem;
+        }
+        .card {
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        .card-header h3 {
+            font-size: 1.5rem;
+            padding: 10px 0;
+        }
+    </style>
     @stack('css')
     @yield('css')
 @stop
-
-@section('title', 'Booking Agent Login')
 
 @section('classes_body', 'login-page')
 
 @section('body')
     <div class="login-box">
+        <!-- Logo -->
         <div class="login-logo">
-            <a href="{{ url('/') }}"><b>Q</b>Med</a>
+            <a href="{{ url('/') }}">
+                <img src="{{ asset(config('adminlte.logo_img')) }}" alt="{{ config('adminlte.logo_img_alt') }}" height="70">
+                <div><b>{{ config('app.name', 'Qmed_Referral3.4') }}</b></div>
+            </a>
         </div>
-        <div class="card card-outline card-primary">
-            <div class="card-header text-center">
-                <h4><b>Booking Agent</b> Login</h4>
-            </div>
-            <div class="card-body">
-                <p class="login-box-msg">Sign in with your booking agent email</p>
 
+        <!-- Card -->
+        <div class="card card-outline card-primary">
+            <div class="card-header">
+                <h3 class="card-title float-none text-center">Sign in as Booking Agent</h3>
+            </div>
+            <div class="card-body login-card-body">
                 <form action="{{ route('booking-agent.login') }}" method="post">
                     @csrf
 
                     <!-- Email field -->
-                    <div class="input-group mb-3">
-                        <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" 
-                            placeholder="Booking Agent Email" value="{{ old('email') }}" autofocus>
+                    <div class="input-group">
+                        <input type="email" name="email" class="form-control @error('email') is-invalid @enderror"
+                            value="{{ old('email') }}" placeholder="Email" autofocus>
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-envelope"></span>
@@ -45,8 +91,8 @@
                     </div>
 
                     <!-- Password field -->
-                    <div class="input-group mb-3">
-                        <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" 
+                    <div class="input-group">
+                        <input type="password" name="password" class="form-control @error('password') is-invalid @enderror"
                             placeholder="Password">
                         <div class="input-group-append">
                             <div class="input-group-text">
@@ -81,8 +127,8 @@
                         <a href="{{ route('password.request') }}">I forgot my password</a>
                     </p>
                     <p class="mt-3 mb-0">
-                        <a href="{{ route('login') }}" class="btn btn-outline-secondary btn-sm">
-                            <i class="fas fa-user mr-1"></i> Standard Login
+                        <a href="{{ route('login') }}" class="btn btn-outline-primary btn-block">
+                            <i class="fas fa-user-shield mr-2"></i> Super Admin Login
                         </a>
                     </p>
                 </div>

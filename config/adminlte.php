@@ -512,6 +512,40 @@ return [
             'classes' => 'bg-light text-primary',
         ],
         [
+            'header' => 'HOSPITAL PROFILES',
+            'classes' => 'text-bold text-uppercase bg-teal',
+            'can' => 'gp-doctor',
+        ],
+        [
+            'text' => 'Institution Profiles',
+            'icon' => 'fas fa-fw fa-hospital-user',
+            'can' => 'gp-doctor',
+            'classes' => 'bg-light text-dark',
+            'submenu' => [
+                [
+                    'text' => 'Hospital',
+                    'url' => 'doctor/profile/hospital',
+                    'icon' => 'fas fa-fw fa-hospital',
+                    'active' => ['doctor/profile/hospital*'],
+                    'classes' => 'text-primary',
+                ],
+                [
+                    'text' => 'Specialty',
+                    'url' => 'doctor/profile/specialty',
+                    'icon' => 'fas fa-fw fa-stethoscope',
+                    'active' => ['doctor/profile/specialty*'],
+                    'classes' => 'text-primary',
+                ],
+                [
+                    'text' => 'Consultant',
+                    'url' => 'doctor/profile/consultant',
+                    'icon' => 'fas fa-fw fa-user-md',
+                    'active' => ['doctor/profile/consultant*'],
+                    'classes' => 'text-primary',
+                ],
+            ],
+        ],
+        [
             'header' => 'GP AFFILIATE PROGRAM',
             'classes' => 'text-bold text-uppercase bg-teal',
             'can' => 'gp-doctor',
