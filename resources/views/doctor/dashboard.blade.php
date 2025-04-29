@@ -7,62 +7,8 @@
 @stop
 
 @section('content')
-    <div class="row mb-4">
-        <div class="col-md-12">
-            <div class="card card-primary card-outline">
-                <div class="card-header">
-                    <h3 class="card-title">
-                        <i class="fas fa-user-md mr-2"></i> GP Account Information
-                    </h3>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <strong><i class="fas fa-envelope mr-1"></i> Login Email:</strong>
-                            <p class="text-muted">{{ Auth::user()->email }}</p>
-                        </div>
-                        <div class="col-md-4">
-                            <strong><i class="fas fa-key mr-1"></i> Password:</strong>
-                            <p class="text-muted">88888888 (default password)</p>
-                        </div>
-                        <div class="col-md-4">
-                            <strong><i class="fas fa-clock mr-1"></i> Last Login:</strong>
-                            <p class="text-muted">{{ Auth::user()->last_login_at ? Auth::user()->last_login_at->format('d M Y, h:i A') : 'First login' }}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="row">
-        <div class="col-lg-3 col-6">
-            <div class="small-box bg-info">
-                <div class="inner">
-                    <h3>Patients</h3>
-                    <p>Patient Management</p>
-                </div>
-                <div class="icon">
-                    <i class="fas fa-user-injured"></i>
-                </div>
-                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
-        </div>
-        
-        <div class="col-lg-3 col-6">
-            <div class="small-box bg-success">
-                <div class="inner">
-                    <h3>Appointments</h3>
-                    <p>Today's Appointments</p>
-                </div>
-                <div class="icon">
-                    <i class="fas fa-calendar-check"></i>
-                </div>
-                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
-        </div>
-        
-        <div class="col-lg-3 col-6">
+        <div class="col-lg-6 col-6">
             <div class="small-box bg-warning">
                 <div class="inner">
                     <h3>Referrals</h3>
@@ -75,7 +21,7 @@
             </div>
         </div>
         
-        <div class="col-lg-3 col-6">
+        <div class="col-lg-6 col-6">
             <div class="small-box bg-danger">
                 <div class="inner">
                     <h3>Loyalty</h3>

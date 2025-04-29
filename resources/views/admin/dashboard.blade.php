@@ -10,20 +10,7 @@
 @section('content')
     <!-- Summary Stats Boxes -->
     <div class="row">
-        <div class="col-lg-3 col-6">
-            <div class="small-box bg-info">
-                <div class="inner">
-                    <h3>{{ \App\Models\User::count() }}</h3>
-                    <p>Total Users</p>
-                </div>
-                <div class="icon">
-                    <i class="fas fa-users"></i>
-                </div>
-                <a href="/admin/users" class="small-box-footer">Manage Users <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
-        </div>
-        
-        <div class="col-lg-3 col-6">
+        <div class="col-lg-4 col-6">
             <div class="small-box bg-success">
                 <div class="inner">
                     <h3>{{ \App\Models\Hospital::count() ?? 12 }}</h3>
@@ -36,7 +23,7 @@
             </div>
         </div>
         
-        <div class="col-lg-3 col-6">
+        <div class="col-lg-4 col-6">
             <div class="small-box bg-warning">
                 <div class="inner">
                     <h3>{{ \App\Models\GP::count() ?? 48 }}</h3>
@@ -49,7 +36,7 @@
             </div>
         </div>
         
-        <div class="col-lg-3 col-6">
+        <div class="col-lg-4 col-6">
             <div class="small-box bg-danger">
                 <div class="inner">
                     <h3>{{ \App\Models\Referral::count() ?? 154 }}</h3>

@@ -38,6 +38,14 @@ class GP extends Model
     }
     
     /**
+     * Get the referrals made by this GP.
+     */
+    public function referrals()
+    {
+        return $this->hasMany(Referral::class, 'gp_id');
+    }
+    
+    /**
      * Get the GP referral program actions for this GP.
      */
     public function gpReferralProgramActions()

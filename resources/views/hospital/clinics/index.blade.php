@@ -10,6 +10,11 @@
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">All Clinics</h3>
+            <div class="float-right">
+                <a href="{{ route('hospital.clinics.create') }}" class="btn btn-primary">
+                    <i class="fas fa-plus mr-1"></i> Add Clinic
+                </a>
+            </div>
         </div>
         <div class="card-body">
             @if($clinics->isEmpty())

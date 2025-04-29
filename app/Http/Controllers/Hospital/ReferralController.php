@@ -337,4 +337,115 @@ class ReferralController extends Controller
             'size' => $size,
         ]);
     }
+
+    /**
+     * Update the status of a referral.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Referral  $referral
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function updateStatus(Request $request, Referral $referral)
+    {
+        \Log::info('Status update request received', [
+            'referral_id' => $referral->id,
+            'current_status' => $referral->status,
+            'requested_status' => $request->input('status'),
+            'request_data' => $request->all()
+        ]);
+
+        // Get hospital associated with the logged-in user
+        $hospital = Hospital::where('email', Auth::user()->email)->firstOrFail();
+        
+        // Check if the referral belongs to this hospital
+        if ($referral->hospital_id !== $hospital->id) {
+            \Log::warning('Unauthorized status update attempt', [
+                'referral_id' => $referral->id,
+                'hospital_id' => $hospital->id,
+                'referral_hospital_id' => $referral->hospital_id
+            ]);
+            abort(403, 'Unauthorized action.');
+        }
+
+        $validated = $request->validate([
+            'status' => 'required|in:Pending,Approved,Rejected,No Show,Completed',
+        ]);
+
+        $oldStatus = $referral->status;
+        $newStatus = $validated['status'];
+        
+        // Validate status flow
+        $isValidTransition = false;
+        
+        switch ($oldStatus) {
+            case 'Pending':
+                $isValidTransition = in_array($newStatus, ['Approved', 'Rejected']);
+                break;
+            case 'Approved':
+                $isValidTransition = in_array($newStatus, ['Completed', 'No Show']);
+                break;
+            case 'Rejected':
+            case 'Completed':
+            case 'No Show':
+                // These are final states, no further transitions allowed
+                $isValidTransition = false;
+                break;
+            default:
+                // For any other status, allow transition to Pending, Approved, or Rejected
+                $isValidTransition = in_array($newStatus, ['Pending', 'Approved', 'Rejected']);
+                break;
+        }
+        
+        \Log::info('Status transition validation', [
+            'old_status' => $oldStatus,
+            'new_status' => $newStatus,
+            'is_valid_transition' => $isValidTransition
+        ]);
+
+        if (!$isValidTransition) {
+            \Log::warning('Invalid status transition attempted', [
+                'referral_id' => $referral->id,
+                'old_status' => $oldStatus,
+                'new_status' => $newStatus
+            ]);
+            return redirect()->back()->with('error', "Invalid status transition from {$oldStatus} to {$newStatus}. Please follow the proper status flow.");
+        }
+        
+        // Get the current loyalty points count for this referral
+        $initialPointsCount = $referral->loyaltyPoints()->count();
+        
+        try {
+            $referral->update(['status' => $newStatus]);
+            \Log::info('Status updated successfully', [
+                'referral_id' => $referral->id,
+                'old_status' => $oldStatus,
+                'new_status' => $newStatus
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Error updating status', [
+                'referral_id' => $referral->id,
+                'error' => $e->getMessage()
+            ]);
+            return redirect()->back()->with('error', 'An error occurred while updating the status.');
+        }
+        
+        $message = 'Referral status updated to ' . $newStatus . ' successfully.';
+        
+        // Check if the status has changed and update loyalty points
+        if ($oldStatus !== $newStatus) {
+            $referral->updateLoyaltyPoints();
+            
+            // Check if new loyalty points were awarded
+            $newPointsCount = $referral->loyaltyPoints()->count();
+            
+            if ($newPointsCount > $initialPointsCount) {
+                $latestPoints = $referral->loyaltyPoints()->latest()->first();
+                if ($latestPoints) {
+                    $message .= ' ' . $latestPoints->points . ' loyalty points were awarded to the referrer.';
+                }
+            }
+        }
+
+        return redirect()->back()->with('success', $message);
+    }
 } 

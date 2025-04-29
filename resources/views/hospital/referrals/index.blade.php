@@ -175,6 +175,48 @@
                                     @elseif($referral->status == 'Completed')
                                         <span class="badge bg-info">Completed</span>
                                     @endif
+                                    
+                                    <div class="dropdown d-inline ml-1">
+                                        <button class="btn btn-xs btn-secondary dropdown-toggle" type="button" id="statusDropdown{{ $referral->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            Change
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="statusDropdown{{ $referral->id }}">
+                                            <form action="{{ route('hospital.referrals.update-status', $referral->id) }}" method="POST" class="status-form">
+                                                @csrf
+                                                @method('PATCH')
+                                                
+                                                @if($referral->status == 'Pending')
+                                                    {{-- From Pending, can only go to Approved or Rejected --}}
+                                                    <button type="submit" name="status" value="Approved" class="dropdown-item">
+                                                        <i class="fas fa-circle text-success mr-1"></i> Approve
+                                                    </button>
+                                                    
+                                                    <button type="submit" name="status" value="Rejected" class="dropdown-item">
+                                                        <i class="fas fa-circle text-danger mr-1"></i> Reject
+                                                    </button>
+                                                @elseif($referral->status == 'Approved')
+                                                    {{-- From Approved, can only go to Completed or No Show --}}
+                                                    <button type="submit" name="status" value="Completed" class="dropdown-item">
+                                                        <i class="fas fa-circle text-primary mr-1"></i> Complete
+                                                    </button>
+                                                    
+                                                    <button type="submit" name="status" value="No Show" class="dropdown-item">
+                                                        <i class="fas fa-circle text-warning mr-1"></i> Mark as No Show
+                                                    </button>
+                                                @elseif(in_array($referral->status, ['Rejected', 'Completed', 'No Show']))
+                                                    {{-- Final states, no further transitions --}}
+                                                    <span class="dropdown-item-text text-muted">
+                                                        <i class="fas fa-info-circle mr-1"></i> No further status changes allowed
+                                                    </span>
+                                                @else
+                                                    {{-- Fallback for any unexpected status --}}
+                                                    <button type="submit" name="status" value="Pending" class="dropdown-item">
+                                                        <i class="fas fa-circle text-secondary mr-1"></i> Mark as Pending
+                                                    </button>
+                                                @endif
+                                            </form>
+                                        </div>
+                                    </div>
                                 </td>
                                 <td>{{ $referral->created_at->format('d M Y') }}</td>
                                 <td>
@@ -216,6 +258,64 @@
 
 @section('js')
     <script>
-        console.log('Hi!');
+        $(document).ready(function() {
+            // Debug log
+            console.log('Document ready, initializing status change handlers');
+            
+            // Prevent dropdowns from closing when clicking inside them
+            $(document).on('click', '.dropdown-menu', function(e) {
+                console.log('Dropdown menu clicked, preventing close');
+                e.stopPropagation();
+            });
+            
+            // Prevent status dropdowns from automatically closing
+            $('.dropdown-menu button[type="submit"]').on('click', function(e) {
+                console.log('Submit button clicked, preventing dropdown close');
+                e.stopPropagation();
+            });
+            
+            // Confirmation dialog for status change
+            $('.status-form button[type="submit"]').on('click', function(e) {
+                console.log('Status change button clicked');
+                e.preventDefault();
+                
+                var $button = $(this);
+                var $form = $button.closest('form');
+                var statusValue = $button.val();
+                var referralId = $form.attr('action').split('/').pop();
+                
+                console.log('Status change details:', {
+                    statusValue: statusValue,
+                    referralId: referralId,
+                    formAction: $form.attr('action'),
+                    formMethod: $form.attr('method')
+                });
+                
+                var confirmMessage = 'Are you sure you want to change the status to ' + statusValue + '?';
+                
+                // Add context based on the status transition
+                switch(statusValue) {
+                    case 'Approved':
+                        confirmMessage += '\n\nThis will move the referral forward in the process. Next steps will be to Complete it or mark as No Show.';
+                        break;
+                    case 'Rejected':
+                        confirmMessage += '\n\nThis will mark the referral as rejected. This is a final state and cannot be changed later.';
+                        break;
+                    case 'Completed':
+                        confirmMessage += '\n\nThis will award loyalty points to the referrer if applicable. This is a final state and cannot be changed later.';
+                        break;
+                    case 'No Show':
+                        confirmMessage += '\n\nThis will mark the patient as not showing up for the appointment. This is a final state and cannot be changed later.';
+                        break;
+                }
+                
+                if (confirm(confirmMessage)) {
+                    console.log('Confirmation accepted, submitting form');
+                    $form.submit();
+                } else {
+                    console.log('Status change cancelled by user');
+                }
+            });
+        });
     </script>
 @stop 

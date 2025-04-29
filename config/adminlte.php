@@ -457,12 +457,12 @@ return [
             ],
         ],
         [
-            'header' => 'GP REFERRAL PROGRAM',
+            'header' => 'GP AFFILIATE PROGRAM',
             'classes' => 'text-bold text-uppercase bg-teal',
             'can' => 'super-admin',
         ],
         [
-            'text' => 'GP Referral Program',
+            'text' => 'GP Affiliate Program',
             'icon' => 'fas fa-fw fa-project-diagram',
             'classes' => 'bg-light text-dark',
             'can' => 'super-admin',
@@ -496,13 +496,6 @@ return [
             'can' => 'gp-doctor',
         ],
         [
-            'text' => 'GP Statistics',
-            'url' => 'doctor/statistics',
-            'icon' => 'fas fa-fw fa-chart-bar',
-            'classes' => 'bg-light text-dark',
-            'can' => 'gp-doctor',
-        ],
-        [
             'text' => 'Referrals',
             'url' => 'doctor/referrals',
             'icon' => 'fas fa-fw fa-file-medical',
@@ -519,7 +512,7 @@ return [
             'classes' => 'bg-light text-primary',
         ],
         [
-            'header' => 'GP REFERRAL PROGRAM',
+            'header' => 'GP AFFILIATE PROGRAM',
             'classes' => 'text-bold text-uppercase bg-teal',
             'can' => 'gp-doctor',
         ],

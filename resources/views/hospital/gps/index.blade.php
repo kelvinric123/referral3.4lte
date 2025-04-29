@@ -10,6 +10,11 @@
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">All GP Doctors</h3>
+            <div class="float-right">
+                <a href="{{ route('hospital.gps.create') }}" class="btn btn-primary">
+                    <i class="fas fa-plus mr-1"></i> Add GP Doctor
+                </a>
+            </div>
         </div>
         <div class="card-body">
             @if($gps->isEmpty())

@@ -139,6 +139,9 @@ Route::prefix('hospital')->name('hospital.')->middleware(['auth', 'role:hospital
     // Referral Management
     Route::resource('referrals', App\Http\Controllers\Hospital\ReferralController::class)->names('referrals');
     
+    // Add referral status update route
+    Route::patch('/referrals/{referral}/update-status', [App\Http\Controllers\Hospital\ReferralController::class, 'updateStatus'])->name('referrals.update-status');
+    
     // Loyalty Points Routes
     Route::get('/loyalty-points', [App\Http\Controllers\Hospital\LoyaltyPointController::class, 'index'])->name('loyalty-points.index');
     
