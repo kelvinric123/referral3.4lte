@@ -59,4 +59,12 @@ class Hospital extends Model
     {
         return $this->hasMany(Service::class);
     }
+
+    /**
+     * Get the referrals for the hospital.
+     */
+    public function referrals()
+    {
+        return $this->hasMany(Referral::class);
+    }
 }

@@ -580,6 +580,78 @@ return [
             'active' => ['consultant/referrals*'],
             'classes' => 'bg-light text-primary',
         ],
+        [
+            'text' => 'My Statistics',
+            'url' => 'consultant/statistics',
+            'icon' => 'fas fa-fw fa-chart-bar',
+            'can' => 'consultant',
+            'active' => ['consultant/statistics*'],
+            'classes' => 'bg-light text-primary',
+        ],
+        
+        // Booking Agent Dashboard
+        [
+            'header' => 'BOOKING AGENT DASHBOARD',
+            'classes' => 'text-bold text-uppercase bg-teal',
+            'can' => 'booking-agent',
+        ],
+        [
+            'text' => 'Booking Agent Dashboard',
+            'url' => 'booking/dashboard',
+            'icon' => 'fas fa-fw fa-tachometer-alt',
+            'classes' => 'bg-light text-dark',
+            'can' => 'booking-agent',
+        ],
+        [
+            'text' => 'Referrals',
+            'url' => 'booking/referrals',
+            'icon' => 'fas fa-fw fa-file-medical',
+            'can' => 'booking-agent',
+            'active' => ['booking/referrals*'],
+            'classes' => 'bg-light text-primary',
+        ],
+        [
+            'text' => 'Booking Agent Loyalty Points',
+            'url' => 'booking/loyalty-points',
+            'icon' => 'fas fa-fw fa-star',
+            'can' => 'booking-agent',
+            'active' => ['booking/loyalty-points*'],
+            'classes' => 'bg-light text-primary',
+        ],
+        [
+            'header' => 'HOSPITAL PROFILES',
+            'classes' => 'text-bold text-uppercase bg-teal',
+            'can' => 'booking-agent',
+        ],
+        [
+            'text' => 'Institution Profiles',
+            'icon' => 'fas fa-fw fa-hospital-user',
+            'can' => 'booking-agent',
+            'classes' => 'bg-light text-dark',
+            'submenu' => [
+                [
+                    'text' => 'Hospital',
+                    'url' => 'booking/profile/hospital',
+                    'icon' => 'fas fa-fw fa-hospital',
+                    'active' => ['booking/profile/hospital*'],
+                    'classes' => 'text-primary',
+                ],
+                [
+                    'text' => 'Specialty',
+                    'url' => 'booking/profile/specialty',
+                    'icon' => 'fas fa-fw fa-stethoscope',
+                    'active' => ['booking/profile/specialty*'],
+                    'classes' => 'text-primary',
+                ],
+                [
+                    'text' => 'Consultant',
+                    'url' => 'booking/profile/consultant',
+                    'icon' => 'fas fa-fw fa-user-md',
+                    'active' => ['booking/profile/consultant*'],
+                    'classes' => 'text-primary',
+                ],
+            ],
+        ],
         
         // Hospital Admin Dashboard
         [

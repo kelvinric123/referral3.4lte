@@ -50,13 +50,13 @@
         <div class="col-lg-3 col-6">
             <div class="small-box bg-danger">
                 <div class="inner">
-                    <h3>Calendar</h3>
-                    <p>Schedule Management</p>
+                    <h3>Statistics</h3>
+                    <p>My Performance</p>
                 </div>
                 <div class="icon">
-                    <i class="fas fa-calendar-alt"></i>
+                    <i class="fas fa-chart-bar"></i>
                 </div>
-                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                <a href="{{ route('consultant.statistics') }}" class="small-box-footer">View Statistics <i class="fas fa-arrow-circle-right"></i></a>
             </div>
         </div>
     </div>

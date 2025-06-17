@@ -148,7 +148,7 @@ class Referral extends Model
         // Get the latest balance for this entity
         $latestPoint = LoyaltyPoint::where('pointable_type', get_class($pointable))
             ->where('pointable_id', $pointable->id)
-            ->orderBy('created_at', 'desc')
+            ->orderBy('id', 'desc')
             ->first();
 
         $currentBalance = $latestPoint ? $latestPoint->balance : 0;

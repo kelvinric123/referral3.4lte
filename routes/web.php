@@ -164,6 +164,9 @@ Route::prefix('hospital')->name('hospital.')->middleware(['auth', 'role:hospital
 Route::prefix('consultant')->name('consultant.')->middleware(['auth', 'role:consultant,super-admin'])->group(function () {
     Route::get('/dashboard', [ConsultantDashboardController::class, 'index'])->name('dashboard');
     
+    // Consultant Statistics
+    Route::get('/statistics', 'App\Http\Controllers\Consultant\StatisticsController@index')->name('statistics');
+    
     // Referral Management
     Route::get('/referrals', [App\Http\Controllers\Consultant\ReferralController::class, 'index'])->name('referrals.index');
     Route::get('/referrals/{referral}', [App\Http\Controllers\Consultant\ReferralController::class, 'show'])->name('referrals.show');
@@ -200,6 +203,23 @@ Route::prefix('doctor')->name('doctor.')->middleware(['auth', 'role:gp-doctor'])
 // Booking Agent Routes
 Route::prefix('booking')->name('booking.')->middleware(['auth', 'role:booking-agent'])->group(function () {
     Route::get('/dashboard', [BookingDashboardController::class, 'index'])->name('dashboard');
+    
+    // Referrals
+    Route::get('/referrals', [App\Http\Controllers\Booking\ReferralController::class, 'index'])->name('referrals.index');
+    Route::get('/referrals/create', [App\Http\Controllers\Booking\ReferralController::class, 'create'])->name('referrals.create');
+    Route::post('/referrals', [App\Http\Controllers\Booking\ReferralController::class, 'store'])->name('referrals.store');
+    Route::get('/referrals/{referral}', [App\Http\Controllers\Booking\ReferralController::class, 'show'])->name('referrals.show');
+    Route::get('/referrals/{referral}/edit', [App\Http\Controllers\Booking\ReferralController::class, 'edit'])->name('referrals.edit');
+    Route::put('/referrals/{referral}', [App\Http\Controllers\Booking\ReferralController::class, 'update'])->name('referrals.update');
+    Route::patch('/referrals/{referral}/cancel', [App\Http\Controllers\Booking\ReferralController::class, 'cancel'])->name('referrals.cancel');
+    
+    // Loyalty Points
+    Route::get('/loyalty-points', [App\Http\Controllers\Booking\LoyaltyPointController::class, 'index'])->name('loyalty-points.index');
+    
+    // Profile Routes
+    Route::get('/profile/hospital', [App\Http\Controllers\Booking\ProfileController::class, 'hospital'])->name('profile.hospital');
+    Route::get('/profile/specialty', [App\Http\Controllers\Booking\ProfileController::class, 'specialty'])->name('profile.specialty');
+    Route::get('/profile/consultant', [App\Http\Controllers\Booking\ProfileController::class, 'consultant'])->name('profile.consultant');
 });
 
 Auth::routes();

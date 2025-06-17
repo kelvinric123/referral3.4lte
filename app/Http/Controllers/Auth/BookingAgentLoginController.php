@@ -46,35 +46,70 @@ class BookingAgentLoginController extends Controller
     {
         $this->validateLogin($request);
 
-        // Check if a booking agent user exists with this email
-        $user = User::where('email', $request->email)->first();
+        // Check if a booking agent with this email exists
+        $bookingAgent = BookingAgent::where('email', $request->email)->first();
 
-        if (!$user || !$user->hasRole('booking-agent')) {
+        if (!$bookingAgent) {
             throw ValidationException::withMessages([
                 'email' => ['No booking agent account found with this email address.'],
             ]);
         }
 
-        // Check if the booking agent is active
-        $bookingAgent = BookingAgent::where('email', $request->email)->first();
-        if ($bookingAgent && !$bookingAgent->is_active) {
-            throw ValidationException::withMessages([
-                'email' => ['Your booking agent account is inactive. Please contact the administrator.'],
-            ]);
-        }
-
-        // Check if the credentials are valid
-        if (!Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+        // Check if the password matches (since BookingAgent hashes passwords, we need to check the hash)
+        if (!Hash::check($request->password, $bookingAgent->password)) {
             throw ValidationException::withMessages([
                 'password' => ['The provided credentials are incorrect.'],
             ]);
+        }
+
+        // Check if the booking agent is active
+        if (!$bookingAgent->is_active) {
+            throw ValidationException::withMessages([
+                'email' => ['Your account is inactive. Please contact the administrator.'],
+            ]);
+        }
+
+        // Find or create a User record for this booking agent
+        $user = $this->findOrCreateUserForBookingAgent($bookingAgent);
+
+        // Login the user
+        Auth::login($user);
+
+        return redirect()->route('booking.dashboard');
+    }
+
+    /**
+     * Find or create a User record for a booking agent.
+     *
+     * @param  \App\Models\BookingAgent  $bookingAgent
+     * @return \App\Models\User
+     */
+    protected function findOrCreateUserForBookingAgent(BookingAgent $bookingAgent)
+    {
+        // Try to find an existing user with this email
+        $user = User::where('email', $bookingAgent->email)->first();
+
+        // If no user exists, create one
+        if (!$user) {
+            $user = User::create([
+                'name' => $bookingAgent->name,
+                'email' => $bookingAgent->email,
+                'password' => $bookingAgent->password, // Use the already hashed password
+                'active' => true,
+            ]);
+
+            // Assign booking agent role
+            $role = Role::where('slug', 'booking-agent')->first();
+            if ($role) {
+                $user->roles()->attach($role);
+            }
         }
 
         // Update last login timestamp
         $user->last_login_at = now();
         $user->save();
 
-        return redirect()->route('booking.dashboard');
+        return $user;
     }
 
     /**
