@@ -3,121 +3,233 @@
 @section('title', 'Edit Referral')
 
 @section('content_header')
-    <h1>Edit Referral #{{ $referral->id }}</h1>
+    <div class="d-flex justify-content-between align-items-center">
+        <h1>Edit Referral #{{ $referral->id }}</h1>
+        <div>
+            <a href="{{ route('admin.referrals.index') }}" class="btn btn-default mr-2">
+                <i class="fas fa-arrow-left"></i> Back to List
+            </a>
+            <a href="{{ route('admin.referrals.show', $referral->id) }}" class="btn btn-info mr-2">
+                <i class="fas fa-eye"></i> View Only
+            </a>
+        </div>
+    </div>
 @stop
 
 @section('content')
-    <div class="card">
-        <div class="card-header">
-            <h3 class="card-title">Referral Information</h3>
-        </div>
-        <form action="{{ route('admin.referrals.update', $referral->id) }}" method="POST" enctype="multipart/form-data">
-            @csrf
-            @method('PUT')
-            <div class="card-body">
-                @if ($errors->any())
-                    <div class="alert alert-danger">
-                        <ul>
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
+    <form action="{{ route('admin.referrals.update', $referral->id) }}" method="POST" enctype="multipart/form-data">
+        @csrf
+        @method('PUT')
+        
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul class="mb-0">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
-                <div class="row">
-                    <div class="col-12">
-                        <h4>Patient Information</h4>
-                        <hr>
+        <div class="row">
+            <div class="col-md-8">
+                <!-- Patient Information -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-user-injured mr-2"></i>
+                            Patient Information
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label"><strong>Name</strong></label>
+                                    <input type="text" class="form-control @error('patient_name') is-invalid @enderror text-uppercase" name="patient_name" value="{{ old('patient_name', $referral->patient_name) }}" required style="text-transform: uppercase;">
+                                    @error('patient_name')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label"><strong>ID Type</strong></label>
+                                    <div class="mt-2">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="id_type" id="id_type_ic" value="ic" {{ old('id_type', $referral->id_type ?? 'ic') == 'ic' ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="id_type_ic">Malaysian IC</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="id_type" id="id_type_passport" value="passport" {{ old('id_type', $referral->id_type ?? 'ic') == 'passport' ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="id_type_passport">Passport</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label" id="patient_id_label"><strong>IC Number</strong></label>
+                                    <input type="text" class="form-control @error('patient_id') is-invalid @enderror" id="patient_id" name="patient_id" value="{{ old('patient_id', $referral->patient_id) }}" required>
+                                    <small class="form-text text-muted" id="patient_id_help">Malaysian IC format: YYMMDD-PB-###G</small>
+                                    @error('patient_id')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label"><strong>Date of Birth</strong></label>
+                                    <input type="date" class="form-control @error('patient_dob') is-invalid @enderror" id="patient_dob" name="patient_dob" value="{{ old('patient_dob', $referral->patient_dob ? date('Y-m-d', strtotime($referral->patient_dob)) : '') }}" required>
+                                    @error('patient_dob')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label"><strong>Age</strong></label>
+                                    <input type="number" class="form-control @error('patient_age') is-invalid @enderror" id="patient_age" name="patient_age" value="{{ old('patient_age', $referral->patient_age ?? '') }}" min="0" max="150" required>
+                                    @error('patient_age')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label"><strong>Contact Number</strong></label>
+                                    <input type="text" class="form-control @error('patient_contact') is-invalid @enderror" name="patient_contact" value="{{ old('patient_contact', $referral->patient_contact) }}" required>
+                                    @error('patient_contact')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label"><strong>Email</strong></label>
+                                    <input type="email" class="form-control @error('patient_email') is-invalid @enderror" name="patient_email" value="{{ old('patient_email', $referral->patient_email) }}">
+                                    @error('patient_email')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label"><strong>Address</strong></label>
+                                    <textarea class="form-control @error('patient_address') is-invalid @enderror" name="patient_address" rows="3">{{ old('patient_address', $referral->patient_address) }}</textarea>
+                                    @error('patient_address')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col-md-4">
+                <!-- Medical Information -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-notes-medical mr-2"></i>
+                            Medical Information
+                        </h3>
+                    </div>
+                    <div class="card-body">
                         <div class="form-group">
-                            <label for="patient_name">Patient Name <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control @error('patient_name') is-invalid @enderror text-uppercase" id="patient_name" name="patient_name" value="{{ old('patient_name', $referral->patient_name) }}" required style="text-transform: uppercase;">
-                            @error('patient_name')
+                            <label class="form-label"><strong>Diagnosis/Condition</strong></label>
+                            <textarea class="form-control @error('diagnosis') is-invalid @enderror" name="diagnosis" rows="3" required>{{ old('diagnosis', $referral->diagnosis) }}</textarea>
+                            @error('diagnosis')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label"><strong>Clinical History</strong></label>
+                            <textarea class="form-control @error('clinical_history') is-invalid @enderror" name="clinical_history" rows="3">{{ old('clinical_history', $referral->clinical_history) }}</textarea>
+                            @error('clinical_history')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label"><strong>Additional Remarks</strong></label>
+                            <textarea class="form-control @error('remarks') is-invalid @enderror" name="remarks" rows="3">{{ old('remarks', $referral->remarks) }}</textarea>
+                            @error('remarks')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="patient_id">Patient ID <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control @error('patient_id') is-invalid @enderror" id="patient_id" name="patient_id" value="{{ old('patient_id', $referral->patient_id) }}" required>
-                            <small class="form-text text-muted">Malaysian IC format: YYMMDD-PB-###G</small>
-                            @error('patient_id')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
+                </div>
+
+                <!-- Documents -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-file mr-2"></i>
+                            Documents
+                        </h3>
                     </div>
-                    <div class="col-md-4">
+                    <div class="card-body">
+                        @if($referral->documents && count($referral->documents) > 0)
+                            <div class="table-responsive mb-3">
+                                <table class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Document Name</th>
+                                            <th>Type</th>
+                                            <th>Uploaded</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($referral->documents as $document)
+                                        <tr>
+                                            <td>{{ $document->original_name }}</td>
+                                            <td>{{ $document->type }}</td>
+                                            <td>{{ $document->created_at->format('d M Y') }}</td>
+                                            <td>
+                                                <a href="{{ route('admin.documents.download', $document->id) }}" class="btn btn-sm btn-info">
+                                                    <i class="fas fa-download"></i> Download
+                                                </a>
+                                                <button type="button" class="btn btn-sm btn-danger delete-document" data-id="{{ $document->id }}">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        @else
+                            <p class="text-muted">No documents uploaded yet.</p>
+                        @endif
+
+                        <!-- Document Upload Form -->
                         <div class="form-group">
-                            <label for="patient_dob">Date of Birth</label>
-                            <input type="date" class="form-control @error('patient_dob') is-invalid @enderror" id="patient_dob" name="patient_dob" value="{{ old('patient_dob', $referral->patient_dob ? date('Y-m-d', strtotime($referral->patient_dob)) : '') }}" readonly>
-                            @error('patient_dob')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                            <label for="documents"><strong>Upload Additional Documents</strong></label>
+                            <div class="input-group">
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="documents" name="documents[]" multiple>
+                                    <label class="custom-file-label" for="documents">Choose files</label>
+                                </div>
+                            </div>
+                            <small class="form-text text-muted">You can upload multiple files. Allowed file types: PDF, DOC, DOCX, JPG, PNG. Max size: 10MB per file.</small>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="patient_age">Age</label>
-                            <input type="text" class="form-control" id="patient_age" readonly>
-                        </div>
+            <div class="col-md-4">
+                <!-- Hospital & Specialty -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-hospital mr-2"></i>
+                            Hospital & Specialty
+                        </h3>
                     </div>
-                    <div class="col-md-6">
+                    <div class="card-body">
                         <div class="form-group">
-                            <label for="patient_phone">Phone Number</label>
-                            <input type="text" class="form-control @error('patient_phone') is-invalid @enderror" id="patient_phone" name="patient_phone" value="{{ old('patient_phone', $referral->patient_phone) }}">
-                            @error('patient_phone')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="patient_email">Email</label>
-                            <input type="email" class="form-control @error('patient_email') is-invalid @enderror" id="patient_email" name="patient_email" value="{{ old('patient_email', $referral->patient_email) }}">
-                            @error('patient_email')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-12">
-                        <div class="form-group">
-                            <label for="patient_address">Address</label>
-                            <textarea class="form-control @error('patient_address') is-invalid @enderror" id="patient_address" name="patient_address" rows="2">{{ old('patient_address', $referral->patient_address) }}</textarea>
-                            @error('patient_address')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row mt-4">
-                    <div class="col-12">
-                        <h4>Hospital & Specialty</h4>
-                        <hr>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="hospital_id">Hospital <span class="text-danger">*</span></label>
+                            <label class="form-label"><strong>Hospital</strong></label>
                             <select class="form-control select2 @error('hospital_id') is-invalid @enderror" id="hospital_id" name="hospital_id" required>
                                 <option value="">Select Hospital</option>
+                                @php
+                                    $hospitals = \App\Models\Hospital::where('is_active', true)->get();
+                                @endphp
                                 @foreach($hospitals as $hospital)
                                     <option value="{{ $hospital->id }}" {{ old('hospital_id', $referral->hospital_id) == $hospital->id ? 'selected' : '' }}>
                                         {{ $hospital->name }}
@@ -128,12 +240,14 @@
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
-                    </div>
-                    <div class="col-md-6">
+                        
                         <div class="form-group">
-                            <label for="specialty_id">Specialty <span class="text-danger">*</span></label>
+                            <label class="form-label"><strong>Specialty</strong></label>
                             <select class="form-control select2 @error('specialty_id') is-invalid @enderror" id="specialty_id" name="specialty_id" required>
                                 <option value="">Select Specialty</option>
+                                @php
+                                    $specialties = \App\Models\Specialty::with('hospital')->where('is_active', true)->get();
+                                @endphp
                                 @foreach($specialties as $specialty)
                                     <option value="{{ $specialty->id }}" 
                                             data-hospital="{{ $specialty->hospital_id }}"
@@ -146,54 +260,20 @@
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-6">
+                        
                         <div class="form-group">
-                            <label for="consultant_gender">Preferred Gender</label>
-                            <select class="form-control" id="consultant_gender">
-                                <option value="">Any Gender</option>
-                                <option value="male">Male</option>
-                                <option value="female">Female</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="consultant_language">Preferred Language</label>
-                            <select class="form-control" id="consultant_language">
-                                <option value="">Any Language</option>
-                                <option value="English">English</option>
-                                <option value="Malay">Malay</option>
-                                <option value="Mandarin">Mandarin</option>
-                                <option value="Tamil">Tamil</option>
-                                <option value="Hindi">Hindi</option>
-                                <option value="Arabic">Arabic</option>
-                                <option value="Japanese">Japanese</option>
-                                <option value="Korean">Korean</option>
-                                <option value="French">French</option>
-                                <option value="German">German</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <label for="consultant_id">Consultant <span class="text-danger">*</span></label>
+                            <label class="form-label"><strong>Consultant</strong></label>
                             <select class="form-control select2 @error('consultant_id') is-invalid @enderror" id="consultant_id" name="consultant_id" required>
                                 <option value="">Select Consultant</option>
+                                @php
+                                    $consultants = \App\Models\Consultant::with(['specialty', 'hospital'])->where('is_active', true)->get();
+                                @endphp
                                 @foreach($consultants as $consultant)
                                     <option value="{{ $consultant->id }}" 
                                             data-specialty="{{ $consultant->specialty_id }}"
                                             data-hospital="{{ $consultant->hospital_id }}"
-                                            data-gender="{{ $consultant->gender }}"
-                                            data-languages="{{ json_encode($consultant->languages) }}"
                                             {{ old('consultant_id', $referral->consultant_id) == $consultant->id ? 'selected' : '' }}>
-                                        {{ $consultant->name }} ({{ ucfirst($consultant->gender) }}, {{ implode(', ', $consultant->languages) }})
+                                        {{ $consultant->name }} ({{ ucfirst($consultant->gender) }})
                                     </option>
                                 @endforeach
                             </select>
@@ -204,17 +284,17 @@
                     </div>
                 </div>
 
-                <div class="row mt-4">
-                    <div class="col-12">
-                        <h4>Referrer Information</h4>
-                        <hr>
+                <!-- Referrer Information -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-user-md mr-2"></i>
+                            Referrer Information
+                        </h3>
                     </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-6">
+                    <div class="card-body">
                         <div class="form-group">
-                            <label for="referrer_type">Referrer Type <span class="text-danger">*</span></label>
+                            <label class="form-label"><strong>Referrer Type</strong></label>
                             <select class="form-control @error('referrer_type') is-invalid @enderror" id="referrer_type" name="referrer_type" required>
                                 <option value="">Select Referrer Type</option>
                                 <option value="GP" {{ old('referrer_type', $referral->referrer_type) == 'GP' ? 'selected' : '' }}>GP</option>
@@ -224,12 +304,14 @@
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
-                    </div>
-                    <div class="col-md-6 gp-field" style="{{ old('referrer_type', $referral->referrer_type) == 'GP' ? '' : 'display: none;' }}">
-                        <div class="form-group">
-                            <label for="gp_id">GP <span class="text-danger">*</span></label>
+                        
+                        <div class="form-group gp-field" style="{{ old('referrer_type', $referral->referrer_type) == 'GP' ? '' : 'display: none;' }}">
+                            <label class="form-label"><strong>GP</strong></label>
                             <select class="form-control select2 @error('gp_id') is-invalid @enderror" id="gp_id" name="gp_id">
                                 <option value="">Select GP</option>
+                                @php
+                                    $gps = \App\Models\GP::where('is_active', true)->get();
+                                @endphp
                                 @foreach($gps as $gp)
                                     <option value="{{ $gp->id }}" {{ old('gp_id', $referral->gp_id) == $gp->id ? 'selected' : '' }}>
                                         {{ $gp->name }}
@@ -240,12 +322,14 @@
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
-                    </div>
-                    <div class="col-md-6 agent-field" style="{{ old('referrer_type', $referral->referrer_type) == 'BookingAgent' ? '' : 'display: none;' }}">
-                        <div class="form-group">
-                            <label for="booking_agent_id">Booking Agent <span class="text-danger">*</span></label>
+                        
+                        <div class="form-group agent-field" style="{{ old('referrer_type', $referral->referrer_type) == 'BookingAgent' ? '' : 'display: none;' }}">
+                            <label class="form-label"><strong>Booking Agent</strong></label>
                             <select class="form-control select2 @error('booking_agent_id') is-invalid @enderror" id="booking_agent_id" name="booking_agent_id">
                                 <option value="">Select Booking Agent</option>
+                                @php
+                                    $bookingAgents = \App\Models\BookingAgent::where('is_active', true)->get();
+                                @endphp
                                 @foreach($bookingAgents as $agent)
                                     <option value="{{ $agent->id }}" {{ old('booking_agent_id', $referral->booking_agent_id) == $agent->id ? 'selected' : '' }}>
                                         {{ $agent->name }}
@@ -259,27 +343,26 @@
                     </div>
                 </div>
 
-                <div class="row mt-4">
-                    <div class="col-12">
-                        <h4>Appointment Details</h4>
-                        <hr>
+                <!-- Appointment Details -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-calendar mr-2"></i>
+                            Appointment Details
+                        </h3>
                     </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-4">
+                    <div class="card-body">
                         <div class="form-group">
-                            <label for="preferred_date">Preferred Date</label>
-                            <input type="date" class="form-control @error('preferred_date') is-invalid @enderror" id="preferred_date" name="preferred_date" value="{{ old('preferred_date', $referral->preferred_date ? date('Y-m-d', strtotime($referral->preferred_date)) : '') }}">
+                            <label class="form-label"><strong>Preferred Date</strong></label>
+                            <input type="date" class="form-control @error('preferred_date') is-invalid @enderror" name="preferred_date" value="{{ old('preferred_date', $referral->preferred_date ? date('Y-m-d', strtotime($referral->preferred_date)) : '') }}">
                             @error('preferred_date')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
-                    </div>
-                    <div class="col-md-4">
+                        
                         <div class="form-group">
-                            <label for="priority">Priority <span class="text-danger">*</span></label>
-                            <select class="form-control @error('priority') is-invalid @enderror" id="priority" name="priority" required>
+                            <label class="form-label"><strong>Priority</strong></label>
+                            <select class="form-control @error('priority') is-invalid @enderror" name="priority" required>
                                 <option value="">Select Priority</option>
                                 <option value="Normal" {{ old('priority', $referral->priority) == 'Normal' ? 'selected' : '' }}>Normal</option>
                                 <option value="Urgent" {{ old('priority', $referral->priority) == 'Urgent' ? 'selected' : '' }}>Urgent</option>
@@ -289,11 +372,10 @@
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
-                    </div>
-                    <div class="col-md-4">
+                        
                         <div class="form-group">
-                            <label for="status">Status <span class="text-danger">*</span></label>
-                            <select class="form-control @error('status') is-invalid @enderror" id="status" name="status" required>
+                            <label class="form-label"><strong>Status</strong></label>
+                            <select class="form-control @error('status') is-invalid @enderror" name="status" required>
                                 @if($referral->status == 'Pending')
                                     <option value="Pending" selected>Pending</option>
                                     <option value="Approved">Approved</option>
@@ -322,115 +404,61 @@
                     </div>
                 </div>
 
-                <div class="row mt-4">
-                    <div class="col-12">
-                        <h4>Medical Information</h4>
-                        <hr>
+                <!-- Previous Feedback Display -->
+                @if($referral->admin_feedback && $referral->feedback_sent_at)
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-comment mr-2"></i>
+                            Previous Feedback to {{ $referral->referrer_type }}
+                        </h3>
                     </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <label for="diagnosis">Diagnosis/Condition <span class="text-danger">*</span></label>
-                            <textarea class="form-control @error('diagnosis') is-invalid @enderror" id="diagnosis" name="diagnosis" rows="3" required>{{ old('diagnosis', $referral->diagnosis) }}</textarea>
-                            @error('diagnosis')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                    <div class="card-body">
+                        <div class="alert alert-info">
+                            <small><strong>Sent:</strong> {{ $referral->feedback_sent_at->format('d M Y, H:i') }}</small>
+                            <div class="mt-2">{{ $referral->admin_feedback }}</div>
                         </div>
                     </div>
                 </div>
-
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <label for="clinical_history">Clinical History</label>
-                            <textarea class="form-control @error('clinical_history') is-invalid @enderror" id="clinical_history" name="clinical_history" rows="3">{{ old('clinical_history', $referral->clinical_history) }}</textarea>
-                            @error('clinical_history')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <label for="remarks">Additional Notes</label>
-                            <textarea class="form-control @error('remarks') is-invalid @enderror" id="remarks" name="remarks" rows="3">{{ old('remarks', $referral->remarks) }}</textarea>
-                            @error('remarks')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <label for="documents">Documents</label>
-                            <div class="input-group">
-                                <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="documents" name="documents[]" multiple>
-                                    <label class="custom-file-label" for="documents">Choose files</label>
-                                </div>
-                            </div>
-                            <small class="form-text text-muted">You can upload multiple files. Allowed file types: PDF, DOC, DOCX, JPG, PNG.</small>
-                            @error('documents')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-                </div>
-
-                @if($referral->documents && count($referral->documents) > 0)
-                    <div class="row mt-3">
-                        <div class="col-md-12">
-                            <label>Current Documents</label>
-                            <div class="table-responsive">
-                                <table class="table table-bordered table-sm">
-                                    <thead>
-                                        <tr>
-                                            <th>Document Name</th>
-                                            <th>Type</th>
-                                            <th>Uploaded</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach($referral->documents as $document)
-                                            <tr>
-                                                <td>{{ $document->name }}</td>
-                                                <td>{{ $document->type }}</td>
-                                                <td>{{ $document->created_at->format('d M Y') }}</td>
-                                                <td>
-                                                    <div class="btn-group">
-                                                        <a href="{{ route('admin.documents.download', $document->id) }}" class="btn btn-sm btn-info">
-                                                            <i class="fas fa-download"></i>
-                                                        </a>
-                                                        <button type="button" class="btn btn-sm btn-danger delete-document" data-id="{{ $document->id }}">
-                                                            <i class="fas fa-trash"></i>
-                                                        </button>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
                 @endif
+
+                <!-- Status Timeline -->
+                @include('admin.referrals.partials.timeline', ['referral' => $referral])
+
+                <!-- Action Buttons -->
+                <div class="card">
+                    <div class="card-body text-center">
+                        <button type="submit" class="btn btn-success btn-lg mr-2">
+                            <i class="fas fa-save"></i> Update Referral
+                        </button>
+                        <a href="{{ route('admin.referrals.show', $referral->id) }}" class="btn btn-secondary btn-lg">
+                            <i class="fas fa-times"></i> Cancel
+                        </a>
+                    </div>
+                </div>
             </div>
-            <div class="card-footer">
-                <button type="submit" class="btn btn-primary">Update Referral</button>
-                <a href="{{ route('admin.referrals.show', $referral->id) }}" class="btn btn-default">Cancel</a>
-            </div>
-        </form>
-    </div>
+        </div>
+    </form>
 @stop
 
 @section('css')
+    <style>
+        .form-label {
+            margin-bottom: 5px;
+            color: #333;
+        }
+        .card {
+            box-shadow: 0 0 1px rgba(0,0,0,.125), 0 1px 3px rgba(0,0,0,.2);
+            margin-bottom: 1rem;
+        }
+        .form-control {
+            border-radius: 4px;
+        }
+        .btn-lg {
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+    </style>
     <link rel="stylesheet" href="/css/admin_custom.css">
 @stop
 
@@ -438,54 +466,83 @@
     <script>
         $(document).ready(function() {
             // Force patient name to uppercase
-            $('#patient_name').on('input', function() {
+            $('input[name="patient_name"]').on('input', function() {
                 $(this).val($(this).val().toUpperCase());
             });
 
-            // Calculate DOB and age from Malaysian IC
-            $('#patient_id').on('input', function() {
-                const icNumber = $(this).val().replace(/[^0-9]/g, ''); // Remove non-numeric characters
+            // Handle ID type change
+            $('input[name="id_type"]').on('change', function() {
+                const idType = $(this).val();
                 
-                // Malaysian IC format: YYMMDD-PB-###G (we need the first 6 digits)
+                if (idType === 'ic') {
+                    $('#patient_id_label').html('<strong>IC Number</strong>');
+                    $('#patient_id_help').text('Malaysian IC format: YYMMDD-PB-###G').show();
+                    $('#patient_dob').prop('readonly', true);
+                    $('#patient_age').prop('readonly', true);
+                    
+                    if ($('#patient_id').val()) {
+                        calculateFromIC();
+                    }
+                } else {
+                    $('#patient_id_label').html('<strong>Passport Number</strong>');
+                    $('#patient_id_help').hide();
+                    $('#patient_dob').prop('readonly', false);
+                    $('#patient_age').prop('readonly', false);
+                }
+            });
+
+            // Calculate DOB and age from Malaysian IC
+            function calculateFromIC() {
+                const icNumber = $('#patient_id').val().replace(/[^0-9]/g, '');
+                
                 if (icNumber.length >= 6) {
                     const yearPart = icNumber.substring(0, 2);
                     const monthPart = icNumber.substring(2, 4);
                     const dayPart = icNumber.substring(4, 6);
                     
-                    // Determine century based on year digits
                     const currentYear = new Date().getFullYear();
                     const century = parseInt(yearPart) > (currentYear % 100) ? 1900 : 2000;
                     const fullYear = century + parseInt(yearPart);
                     
-                    // Create date object with full year, month (0-indexed), and day
                     const dob = new Date(fullYear, parseInt(monthPart) - 1, parseInt(dayPart));
-                    
-                    // Format date for input field (YYYY-MM-DD)
                     const formattedDate = dob.toISOString().split('T')[0];
                     $('#patient_dob').val(formattedDate);
                     
-                    // Calculate age
                     const ageDate = new Date(Date.now() - dob.getTime());
                     const age = Math.abs(ageDate.getUTCFullYear() - 1970);
-                    $('#patient_age').val(age + ' years');
-                } else {
-                    $('#patient_dob').val('');
-                    $('#patient_age').val('');
+                    $('#patient_age').val(age);
+                }
+            }
+
+            // IC input handler
+            $('#patient_id').on('input', function() {
+                const idType = $('input[name="id_type"]:checked').val();
+                if (idType === 'ic') {
+                    calculateFromIC();
+                }
+            });
+
+            // DOB change handler for passport mode
+            $('#patient_dob').on('change', function() {
+                const idType = $('input[name="id_type"]:checked').val();
+                if (idType === 'passport') {
+                    const dob = new Date($(this).val());
+                    if (!isNaN(dob)) {
+                        const ageDate = new Date(Date.now() - dob.getTime());
+                        const age = Math.abs(ageDate.getUTCFullYear() - 1970);
+                        $('#patient_age').val(age);
+                    }
                 }
             });
 
             // Filter specialties by hospital
             $('#hospital_id').on('change', function() {
                 const hospitalId = $(this).val();
-                
-                // Reset specialty and consultant selections
                 $('#specialty_id').val('');
                 $('#consultant_id').val('');
                 
-                // Disable all specialties first
                 $('#specialty_id option').prop('disabled', true);
                 
-                // Enable relevant specialties
                 if (hospitalId) {
                     $('#specialty_id option').each(function() {
                         if ($(this).val() === '' || $(this).data('hospital') == hospitalId) {
@@ -493,84 +550,39 @@
                         }
                     });
                 } else {
-                    // If no hospital selected, enable all specialties
                     $('#specialty_id option').prop('disabled', false);
                 }
                 
-                // Update consultants based on current filters
                 filterConsultants();
             });
 
-            // Filter consultants by specialty, gender and language
+            // Filter consultants
             function filterConsultants() {
                 const specialtyId = $('#specialty_id').val();
                 const hospitalId = $('#hospital_id').val();
-                const gender = $('#consultant_gender').val();
-                const language = $('#consultant_language').val();
                 
-                // Store current selection
-                const currentConsultant = $('#consultant_id').val();
-                
-                // First show all options
                 $('#consultant_id option').show();
                 
-                // Then hide filtered-out options instead of disabling them
                 $('#consultant_id option').each(function() {
-                    if ($(this).val() === '') {
-                        return; // Skip the placeholder option
-                    }
+                    if ($(this).val() === '') return;
                     
                     let match = true;
                     
-                    // Hospital filter
                     if (hospitalId && $(this).data('hospital') != hospitalId) {
                         match = false;
                     }
                     
-                    // Specialty filter
                     if (specialtyId && $(this).data('specialty') != specialtyId) {
                         match = false;
-                    }
-                    
-                    // Gender filter
-                    if (gender && $(this).data('gender') != gender) {
-                        match = false;
-                    }
-                    
-                    // Language filter
-                    if (language) {
-                        const consultantLanguages = $(this).data('languages');
-                        if (!consultantLanguages.includes(language)) {
-                            match = false;
-                        }
                     }
                     
                     if (!match) {
                         $(this).hide();
                     }
                 });
-                
-                // Refresh select2 to apply the changes
-                $('#consultant_id').select2('destroy').select2({
-                    theme: 'bootstrap4',
-                    width: '100%'
-                });
-                
-                // Restore selection if the option is still available
-                if (currentConsultant && $('#consultant_id option[value="' + currentConsultant + '"]:visible').length) {
-                    $('#consultant_id').val(currentConsultant).trigger('change.select2');
-                }
             }
             
-            // Bind events for consultant filtering
-            $('#specialty_id, #consultant_gender, #consultant_language').on('change', function() {
-                filterConsultants();
-            });
-
-            // Trigger IC input if there's a value already (to calculate age on page load)
-            if ($('#patient_id').val()) {
-                $('#patient_id').trigger('input');
-            }
+            $('#specialty_id').on('change', filterConsultants);
 
             // Initialize Select2
             $('.select2').select2({
@@ -578,7 +590,7 @@
                 width: '100%'
             });
             
-            // Show/hide referrer fields based on referrer type
+            // Show/hide referrer fields
             $('#referrer_type').change(function() {
                 var selectedValue = $(this).val();
                 
@@ -616,27 +628,19 @@
                         },
                         success: function(result) {
                             location.reload();
+                        },
+                        error: function() {
+                            alert('Error deleting document');
                         }
                     });
                 }
             });
+
+            // Initialize ID type behavior on page load
+            $('input[name="id_type"]:checked').trigger('change');
             
-            // Initialize form by triggering hospital change
+            // Initialize hospital change to filter specialties/consultants
             $('#hospital_id').trigger('change');
-            
-            // If a consultant is already selected on page load, set filter values
-            if ($('#consultant_id').val()) {
-                const selectedOption = $('#consultant_id option:selected');
-                if (selectedOption.length) {
-                    // Pre-select gender filter if needed
-                    const gender = selectedOption.data('gender');
-                    if (gender) {
-                        $('#consultant_gender').val(gender);
-                    }
-                    
-                    // Don't pre-select language as there may be multiple
-                }
-            }
         });
     </script>
 @stop 

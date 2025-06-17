@@ -356,11 +356,11 @@
                                         <a href="{{ route('admin.referrals.edit', $referral->id) }}" class="btn btn-sm btn-warning">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        <form action="{{ route('admin.referrals.destroy', $referral->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this referral?');">
+                                        <form action="{{ route('admin.referrals.destroy', $referral->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to cancel this referral?');">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-danger">
-                                                <i class="fas fa-trash"></i>
+                                            <button type="submit" class="btn btn-sm btn-warning" title="Cancel Referral">
+                                                <i class="fas fa-ban"></i>
                                             </button>
                                         </form>
                                     </div>

@@ -12,7 +12,9 @@ class Referral extends Model
     protected $fillable = [
         'patient_name',
         'patient_id',
+        'id_type',
         'patient_dob',
+        'patient_age',
         'patient_contact',
         'hospital_id',
         'specialty_id',
@@ -26,11 +28,14 @@ class Referral extends Model
         'clinical_history',
         'remarks',
         'status',
+        'admin_feedback',
+        'feedback_sent_at',
     ];
 
     protected $casts = [
         'patient_dob' => 'date',
         'preferred_date' => 'date',
+        'feedback_sent_at' => 'datetime',
     ];
 
     /**
@@ -98,6 +103,14 @@ class Referral extends Model
     public function loyaltyPoints()
     {
         return $this->hasMany(LoyaltyPoint::class);
+    }
+
+    /**
+     * Get the status history associated with the referral.
+     */
+    public function statusHistories()
+    {
+        return $this->hasMany(ReferralStatusHistory::class)->orderBy('created_at', 'asc');
     }
 
     /**

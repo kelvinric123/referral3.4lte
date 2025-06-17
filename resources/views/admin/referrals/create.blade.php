@@ -36,9 +36,25 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="patient_id">IC/Passport Number</label>
+                                    <label>ID Type</label>
+                                    <div class="form-check-inline">
+                                        <input class="form-check-input" type="radio" name="id_type" id="id_type_ic" value="ic" {{ old('id_type', 'ic') == 'ic' ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="id_type_ic">
+                                            Malaysian IC
+                                        </label>
+                                    </div>
+                                    <div class="form-check-inline ml-3">
+                                        <input class="form-check-input" type="radio" name="id_type" id="id_type_passport" value="passport" {{ old('id_type') == 'passport' ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="id_type_passport">
+                                            Passport
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="patient_id" id="patient_id_label">IC Number</label>
                                     <input type="text" class="form-control @error('patient_id') is-invalid @enderror" id="patient_id" name="patient_id" value="{{ old('patient_id') }}" required>
-                                    <small class="form-text text-muted">Malaysian IC format: YYMMDD-PB-###G</small>
+                                    <small class="form-text text-muted" id="patient_id_help">Malaysian IC format: YYMMDD-PB-###G</small>
                                     @error('patient_id')
                                         <span class="invalid-feedback">{{ $message }}</span>
                                     @enderror
@@ -46,7 +62,7 @@
 
                                 <div class="form-group">
                                     <label for="patient_dob">Date of Birth</label>
-                                    <input type="date" class="form-control @error('patient_dob') is-invalid @enderror" id="patient_dob" name="patient_dob" value="{{ old('patient_dob') }}" readonly>
+                                    <input type="date" class="form-control @error('patient_dob') is-invalid @enderror" id="patient_dob" name="patient_dob" value="{{ old('patient_dob') }}" required>
                                     @error('patient_dob')
                                         <span class="invalid-feedback">{{ $message }}</span>
                                     @enderror
@@ -54,7 +70,10 @@
 
                                 <div class="form-group">
                                     <label for="patient_age">Age</label>
-                                    <input type="text" class="form-control" id="patient_age" readonly>
+                                    <input type="number" class="form-control @error('patient_age') is-invalid @enderror" id="patient_age" name="patient_age" value="{{ old('patient_age') }}" min="0" max="150">
+                                    @error('patient_age')
+                                        <span class="invalid-feedback">{{ $message }}</span>
+                                    @enderror
                                 </div>
 
                                 <div class="form-group">
@@ -328,9 +347,41 @@
                 $(this).val($(this).val().toUpperCase());
             });
 
+            // Handle ID type change
+            $('input[name="id_type"]').on('change', function() {
+                const idType = $(this).val();
+                
+                if (idType === 'ic') {
+                    // IC Mode
+                    $('#patient_id_label').text('IC Number');
+                    $('#patient_id_help').text('Malaysian IC format: YYMMDD-PB-###G').show();
+                    $('#patient_dob').prop('readonly', true);
+                    $('#patient_age').prop('readonly', true);
+                    
+                    // Clear DOB and age fields, they will be auto-calculated
+                    $('#patient_dob').val('');
+                    $('#patient_age').val('');
+                    
+                    // Trigger IC calculation if there's already a value
+                    if ($('#patient_id').val()) {
+                        calculateFromIC();
+                    }
+                } else {
+                    // Passport Mode
+                    $('#patient_id_label').text('Passport Number');
+                    $('#patient_id_help').hide();
+                    $('#patient_dob').prop('readonly', false);
+                    $('#patient_age').prop('readonly', false);
+                    
+                    // Clear the auto-calculated values
+                    $('#patient_dob').val('');
+                    $('#patient_age').val('');
+                }
+            });
+
             // Calculate DOB and age from Malaysian IC
-            $('#patient_id').on('input', function() {
-                const icNumber = $(this).val().replace(/[^0-9]/g, ''); // Remove non-numeric characters
+            function calculateFromIC() {
+                const icNumber = $('#patient_id').val().replace(/[^0-9]/g, ''); // Remove non-numeric characters
                 
                 // Malaysian IC format: YYMMDD-PB-###G (we need the first 6 digits)
                 if (icNumber.length >= 6) {
@@ -353,10 +404,36 @@
                     // Calculate age
                     const ageDate = new Date(Date.now() - dob.getTime());
                     const age = Math.abs(ageDate.getUTCFullYear() - 1970);
-                    $('#patient_age').val(age + ' years');
+                    $('#patient_age').val(age);
                 } else {
                     $('#patient_dob').val('');
                     $('#patient_age').val('');
+                }
+            }
+
+            // Calculate age from DOB for passport mode
+            function calculateAgeFromDOB() {
+                const dob = new Date($('#patient_dob').val());
+                if (!isNaN(dob)) {
+                    const ageDate = new Date(Date.now() - dob.getTime());
+                    const age = Math.abs(ageDate.getUTCFullYear() - 1970);
+                    $('#patient_age').val(age);
+                }
+            }
+
+            // IC input handler
+            $('#patient_id').on('input', function() {
+                const idType = $('input[name="id_type"]:checked').val();
+                if (idType === 'ic') {
+                    calculateFromIC();
+                }
+            });
+
+            // DOB change handler for passport mode
+            $('#patient_dob').on('change', function() {
+                const idType = $('input[name="id_type"]:checked').val();
+                if (idType === 'passport') {
+                    calculateAgeFromDOB();
                 }
             });
 
@@ -507,9 +584,15 @@
                 }
             }
             
+            // Initialize ID type behavior on page load
+            $('input[name="id_type"]:checked').trigger('change');
+            
             // Trigger IC input if there's a value already (for form redisplays)
             if ($('#patient_id').val()) {
-                $('#patient_id').trigger('input');
+                const idType = $('input[name="id_type"]:checked').val();
+                if (idType === 'ic') {
+                    calculateFromIC();
+                }
             }
         });
     </script>

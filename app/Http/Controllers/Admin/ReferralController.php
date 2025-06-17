@@ -9,6 +9,7 @@ use App\Models\Hospital;
 use App\Models\BookingAgent;
 use App\Models\Specialty;
 use App\Models\Referral;
+use App\Models\ReferralStatusHistory;
 use App\Models\Document;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -114,7 +115,9 @@ class ReferralController extends Controller
         $validated = $request->validate([
             'patient_name' => 'required|string|max:255',
             'patient_id' => 'required|string|max:30',
+            'id_type' => 'required|in:ic,passport',
             'patient_dob' => 'required|date',
+            'patient_age' => 'required|integer|min:0|max:150',
             'patient_contact' => 'required|string|max:20',
             'hospital_id' => 'required|exists:hospitals,id',
             'specialty_id' => 'required|exists:specialties,id',
@@ -139,6 +142,9 @@ class ReferralController extends Controller
 
         $referral = Referral::create($validated);
         
+        // Log the referral creation
+        $this->logReferralCreation($referral);
+        
         // Handle document uploads
         if ($request->hasFile('documents')) {
             foreach ($request->file('documents') as $file) {
@@ -157,7 +163,7 @@ class ReferralController extends Controller
      */
     public function show(Referral $referral)
     {
-        $referral->load(['hospital', 'specialty', 'consultant', 'documents']);
+        $referral->load(['hospital', 'specialty', 'consultant', 'documents', 'statusHistories']);
         
         if ($referral->referrer_type === 'GP' && $referral->gp_id) {
             $referral->load('gp');
@@ -173,23 +179,15 @@ class ReferralController extends Controller
      */
     public function edit(Referral $referral)
     {
-        $hospitals = Hospital::where('is_active', true)->get();
-        $specialties = Specialty::with('hospital')->where('is_active', true)->get();
-        $consultants = Consultant::with(['specialty', 'hospital'])->where('is_active', true)->get();
-        $gps = GP::where('is_active', true)->get();
-        $bookingAgents = BookingAgent::where('is_active', true)->get();
+        $referral->load(['hospital', 'specialty', 'consultant', 'documents', 'statusHistories']);
         
-        $statuses = ['Pending', 'Approved', 'Rejected', 'No Show', 'Completed'];
+        if ($referral->referrer_type === 'GP' && $referral->gp_id) {
+            $referral->load('gp');
+        } elseif ($referral->referrer_type === 'BookingAgent' && $referral->booking_agent_id) {
+            $referral->load('bookingAgent');
+        }
         
-        return view('admin.referrals.edit', compact(
-            'referral',
-            'hospitals',
-            'specialties',
-            'consultants',
-            'gps',
-            'bookingAgents',
-            'statuses'
-        ));
+        return view('admin.referrals.edit', compact('referral'));
     }
 
     /**
@@ -200,7 +198,9 @@ class ReferralController extends Controller
         $validated = $request->validate([
             'patient_name' => 'required|string|max:255',
             'patient_id' => 'required|string|max:30',
+            'id_type' => 'required|in:ic,passport',
             'patient_dob' => 'required|date',
+            'patient_age' => 'required|integer|min:0|max:150',
             'patient_contact' => 'required|string|max:20',
             'hospital_id' => 'required|exists:hospitals,id',
             'specialty_id' => 'required|exists:specialties,id',
@@ -223,16 +223,17 @@ class ReferralController extends Controller
         $oldStatus = $referral->status;
         $referral->update($validated);
         
+        // Check if the status has changed
+        if ($oldStatus !== $referral->status) {
+            $this->logStatusChange($referral, $oldStatus, $referral->status);
+            $referral->updateLoyaltyPoints();
+        }
+        
         // Handle document uploads
         if ($request->hasFile('documents')) {
             foreach ($request->file('documents') as $file) {
                 $this->storeDocument($file, $referral);
             }
-        }
-        
-        // Check if the status has changed
-        if ($oldStatus !== $referral->status) {
-            $referral->updateLoyaltyPoints();
         }
 
         return redirect()->route('admin.referrals.index')
@@ -268,6 +269,7 @@ class ReferralController extends Controller
     {
         $validated = $request->validate([
             'status' => 'required|in:Pending,Approved,Rejected,No Show,Completed',
+            'notes' => 'nullable|string|max:1000',
         ]);
 
         $oldStatus = $referral->status;
@@ -304,6 +306,9 @@ class ReferralController extends Controller
         
         $referral->update(['status' => $newStatus]);
         
+        // Log the status change
+        $this->logStatusChange($referral, $oldStatus, $newStatus, $validated['notes'] ?? null);
+        
         $message = 'Referral status updated to ' . $newStatus . ' successfully.';
         
         // Check if the status has changed and update loyalty points
@@ -322,6 +327,104 @@ class ReferralController extends Controller
         }
 
         return redirect()->back()->with('success', $message);
+    }
+    
+    /**
+     * Upload documents to a referral
+     */
+    public function uploadDocuments(Request $request, Referral $referral)
+    {
+        $request->validate([
+            'documents.*' => 'required|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:10240',
+        ]);
+
+        $uploadedCount = 0;
+        
+        if ($request->hasFile('documents')) {
+            foreach ($request->file('documents') as $file) {
+                $this->storeDocument($file, $referral);
+                $uploadedCount++;
+            }
+        }
+
+        $message = $uploadedCount > 0 ? 
+            "{$uploadedCount} document(s) uploaded successfully." : 
+            "No documents were uploaded.";
+
+        return redirect()->route('admin.referrals.show', $referral->id)
+            ->with('success', $message);
+    }
+
+    /**
+     * Send feedback to GP or Booking Agent
+     */
+    public function sendFeedback(Request $request, Referral $referral)
+    {
+        $request->validate([
+            'admin_feedback' => 'required|string|max:1000',
+        ]);
+
+        $referral->update([
+            'admin_feedback' => $request->admin_feedback,
+            'feedback_sent_at' => now(),
+        ]);
+
+        $referrerType = $referral->referrer_type;
+        $referrerName = '';
+        
+        if ($referral->referrer_type === 'GP' && $referral->gp) {
+            $referrerName = $referral->gp->name;
+        } elseif ($referral->referrer_type === 'BookingAgent' && $referral->bookingAgent) {
+            $referrerName = $referral->bookingAgent->name;
+        }
+
+        return redirect()->route('admin.referrals.show', $referral->id)
+            ->with('success', "Feedback sent successfully to {$referrerType}: {$referrerName}");
+    }
+
+    /**
+     * Log status change to referral status history
+     */
+    private function logStatusChange(Referral $referral, $oldStatus, $newStatus, $notes = null)
+    {
+        $user = auth()->user();
+        
+        ReferralStatusHistory::create([
+            'referral_id' => $referral->id,
+            'status' => $newStatus,
+            'previous_status' => $oldStatus,
+            'changed_by_type' => 'User',
+            'changed_by_id' => $user->id,
+            'changed_by_name' => $user->name,
+            'notes' => $notes,
+        ]);
+    }
+
+    /**
+     * Log the initial referral creation
+     */
+    private function logReferralCreation(Referral $referral)
+    {
+        $referrerName = '';
+        $referrerType = '';
+        
+        if ($referral->referrer_type === 'GP' && $referral->gp) {
+            $referrerName = $referral->gp->name;
+            $referrerType = 'GP Doctor';
+        } elseif ($referral->referrer_type === 'BookingAgent' && $referral->bookingAgent) {
+            $referrerName = $referral->bookingAgent->name;
+            $referrerType = 'Booking Agent';
+        }
+        
+        ReferralStatusHistory::create([
+            'referral_id' => $referral->id,
+            'status' => 'Created',
+            'previous_status' => null,
+            'changed_by_type' => $referrerType,
+            'changed_by_id' => $referral->referrer_type === 'GP' ? $referral->gp_id : $referral->booking_agent_id,
+            'changed_by_name' => $referrerName,
+            'notes' => null,
+        ]);
     }
     
     /**
