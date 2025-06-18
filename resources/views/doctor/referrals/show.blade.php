@@ -12,6 +12,24 @@
 @stop
 
 @section('content')
+    @if (session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    @endif
+    
+    @if (session('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ session('error') }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    @endif
+
     <div class="row">
         <div class="col-md-6">
             <div class="card card-primary card-outline">
@@ -104,10 +122,63 @@
                             </div>
                         </div>
                     </div>
+                    
+                    <!-- Send Feedback Section -->
+                    @if(in_array($referral->status, ['Approved', 'Completed', 'No Show']))
+                        <div class="feedback-section mt-3">
+                            <h6 class="text-muted mb-2">Send Feedback to Hospital:</h6>
+                            
+                            @if($referral->gp_feedback && $referral->gp_feedback_sent_at)
+                                <div class="alert alert-info mb-2">
+                                    <small><strong>Last Feedback Sent:</strong> {{ $referral->gp_feedback_sent_at->format('d M Y, H:i') }}</small>
+                                    <div class="mt-1">{{ $referral->gp_feedback }}</div>
+                                </div>
+                            @endif
+                            
+                            <form action="{{ route('doctor.referrals.send-feedback', $referral->id) }}" method="POST" class="feedback-form">
+                                @csrf
+                                <div class="form-group">
+                                    <textarea class="form-control form-control-sm @error('gp_feedback') is-invalid @enderror" 
+                                             name="gp_feedback" 
+                                             rows="3" 
+                                             placeholder="Share your feedback about the consultation, treatment outcome, or experience with the hospital/consultant..."
+                                             required></textarea>
+                                    @error('gp_feedback')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-sm">
+                                    <i class="fas fa-paper-plane mr-1"></i> Send Feedback
+                                </button>
+                            </form>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
     </div>
+    
+    <!-- Admin Feedback Section -->
+    @if($referral->admin_feedback && $referral->feedback_sent_at)
+    <div class="row">
+        <div class="col-12">
+            <div class="card card-info card-outline">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-comment-medical mr-2"></i>
+                        Feedback from Hospital/Admin
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <small><strong>Feedback Received:</strong> {{ $referral->feedback_sent_at->format('d M Y, H:i') }}</small>
+                        <div class="mt-2">{{ $referral->admin_feedback }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
     
     <div class="row">
         <div class="col-md-6">
@@ -184,4 +255,26 @@
         </div>
     </div>
     @endif
+@stop
+
+@section('css')
+    <style>
+        .feedback-section {
+            border-top: 1px solid #e9ecef;
+            padding-top: 15px;
+            margin-top: 15px;
+        }
+        .feedback-form textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        .alert-info {
+            border-left: 4px solid #17a2b8;
+            margin-bottom: 0;
+        }
+        .card-info .card-header {
+            background-color: #d1ecf1;
+            border-bottom: 1px solid #bee5eb;
+        }
+    </style>
 @stop 

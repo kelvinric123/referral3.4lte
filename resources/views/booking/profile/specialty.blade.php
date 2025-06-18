@@ -149,8 +149,8 @@
 
     <!-- Pagination -->
     @if($specialties->hasPages())
-        <div class="d-flex justify-content-center">
-            {{ $specialties->appends(request()->query())->links() }}
+        <div class="mt-4">
+            {{ $specialties->appends(request()->query())->links('vendor.pagination.adminlte') }}
         </div>
     @endif
 @stop
@@ -160,5 +160,14 @@
 @stop
 
 @section('js')
-    <script> console.log('Specialty Profiles loaded'); </script>
+<script>
+$(document).ready(function() {
+    console.log('Specialty Profiles loaded');
+    
+    // Simple cleanup for any DataTables interference
+    setTimeout(function() {
+        $('.dataTables_paginate').remove();
+    }, 500);
+});
+</script>
 @stop 

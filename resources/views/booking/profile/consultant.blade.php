@@ -50,7 +50,7 @@
     </div>
 
     <!-- Consultants Grid -->
-    <div class="row">
+    <div class="row consultant-grid">
         @forelse($consultants as $consultant)
             <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
                 <div class="card h-100">
@@ -61,7 +61,7 @@
                     <div class="card-body">
                         <p class="card-text">
                             <strong>Hospital:</strong> {{ $consultant->hospital->name ?? 'N/A' }}<br>
-                            <strong>Experience:</strong> {{ $consultant->years_experience ?? 'N/A' }} years<br>
+                            <strong>Experience:</strong> {{ $consultant->experience ?? 'N/A' }}<br>
                             <strong>Gender:</strong> {{ ucfirst($consultant->gender) ?? 'N/A' }}
                         </p>
                         
@@ -74,8 +74,8 @@
 
                         @if($consultant->bio)
                             <p class="card-text">
-                                <strong>Bio:</strong><br>
-                                <small class="text-muted">{{ Str::limit($consultant->bio, 100) }}</small>
+                                <strong>Professional Bio:</strong><br>
+                                <small class="bio-text">{{ Str::limit($consultant->bio, 100) }}</small>
                             </p>
                         @endif
 
@@ -134,7 +134,7 @@
                                     <p>
                                         <strong>Specialty:</strong> {{ $consultant->specialty->name ?? 'General' }}<br>
                                         <strong>Hospital:</strong> {{ $consultant->hospital->name ?? 'N/A' }}<br>
-                                        <strong>Experience:</strong> {{ $consultant->years_experience ?? 'N/A' }} years<br>
+                                        <strong>Experience:</strong> {{ $consultant->experience ?? 'N/A' }}<br>
                                         <strong>Gender:</strong> {{ ucfirst($consultant->gender) ?? 'N/A' }}
                                     </p>
 
@@ -156,8 +156,8 @@
                                 </div>
                                 <div class="col-md-6">
                                     @if($consultant->bio)
-                                        <h6>Biography</h6>
-                                        <p>{{ $consultant->bio }}</p>
+                                        <h6>Professional Biography</h6>
+                                        <p class="bio-text">{{ $consultant->bio }}</p>
                                     @endif
 
                                     @if($consultant->services && $consultant->services->count() > 0)
@@ -206,8 +206,8 @@
 
     <!-- Pagination -->
     @if($consultants->hasPages())
-        <div class="d-flex justify-content-center">
-            {{ $consultants->appends(request()->query())->links() }}
+        <div class="mt-4">
+            {{ $consultants->appends(request()->query())->links('vendor.pagination.adminlte') }}
         </div>
     @endif
 @stop
@@ -217,5 +217,14 @@
 @stop
 
 @section('js')
-    <script> console.log('Consultant Profiles loaded'); </script>
+<script>
+$(document).ready(function() {
+    console.log('Consultant Profiles loaded');
+    
+    // Simple cleanup for any DataTables interference
+    setTimeout(function() {
+        $('.dataTables_paginate').remove();
+    }, 500);
+});
+</script>
 @stop 

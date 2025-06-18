@@ -135,4 +135,39 @@ class ReferralController extends Controller
         
         return view('doctor.referrals.show', compact('referral', 'gp'));
     }
+
+    /**
+     * Send feedback to Hospital/Consultant for the referral.
+     */
+    public function sendFeedback(Request $request, Referral $referral)
+    {
+        // Find the corresponding GP record for the logged-in user
+        $gp = GP::where('email', Auth::user()->email)->first();
+
+        if (!$gp) {
+            return redirect()->route('doctor.dashboard')
+                ->with('error', 'No GP record found associated with your account.');
+        }
+
+        // Ensure the referral belongs to this GP
+        if ($referral->referrer_type !== 'GP' || $referral->gp_id !== $gp->id) {
+            return redirect()->route('doctor.referrals.index')
+                ->with('error', 'You do not have permission to send feedback for this referral.');
+        }
+
+        $request->validate([
+            'gp_feedback' => 'required|string|max:1000',
+        ]);
+
+        $referral->update([
+            'gp_feedback' => $request->gp_feedback,
+            'gp_feedback_sent_at' => now(),
+        ]);
+
+        $hospitalName = $referral->hospital->name ?? 'Hospital';
+        $consultantName = $referral->consultant->name ?? 'Consultant';
+
+        return redirect()->route('doctor.referrals.show', $referral->id)
+            ->with('success', "Feedback sent successfully to {$hospitalName} - {$consultantName}");
+    }
 } 

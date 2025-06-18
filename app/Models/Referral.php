@@ -30,12 +30,15 @@ class Referral extends Model
         'status',
         'admin_feedback',
         'feedback_sent_at',
+        'gp_feedback',
+        'gp_feedback_sent_at',
     ];
 
     protected $casts = [
         'patient_dob' => 'date',
         'preferred_date' => 'date',
         'feedback_sent_at' => 'datetime',
+        'gp_feedback_sent_at' => 'datetime',
     ];
 
     /**

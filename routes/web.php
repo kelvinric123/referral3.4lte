@@ -184,6 +184,7 @@ Route::prefix('doctor')->name('doctor.')->middleware(['auth', 'role:gp-doctor'])
     Route::get('/referrals/create', [App\Http\Controllers\Doctor\ReferralController::class, 'create'])->name('referrals.create');
     Route::post('/referrals', [App\Http\Controllers\Doctor\ReferralController::class, 'store'])->name('referrals.store');
     Route::get('/referrals/{referral}', [App\Http\Controllers\Doctor\ReferralController::class, 'show'])->name('referrals.show');
+    Route::post('/referrals/{referral}/send-feedback', [App\Http\Controllers\Doctor\ReferralController::class, 'sendFeedback'])->name('referrals.send-feedback');
     
     // Loyalty Points
     Route::get('/loyalty-points', [App\Http\Controllers\Doctor\LoyaltyPointController::class, 'index'])->name('loyalty-points.index');
